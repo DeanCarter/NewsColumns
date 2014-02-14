@@ -97,6 +97,10 @@ typedef enum
 // Cells
 - (GMGridViewCell *)cellForItemAtIndex:(NSInteger)position;           // Might return nil if cell not loaded yet
 
+
+//Dean添加的方法 (是否能平滑，长按，删除等事件，不包括单击判断)
+- (void)setCanEditing:(BOOL)isCanEditing;
+
 // Actions
 - (void)reloadData;
 - (void)insertObjectAtIndex:(NSInteger)index animated:(BOOL)animated;

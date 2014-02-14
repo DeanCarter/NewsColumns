@@ -108,16 +108,19 @@
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    DLog(@"cell触发事件开始!");
     self.highlighted = YES;
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    DLog(@"cell触发事件结束!");
     self.highlighted = NO;
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    DLog(@"cell触发事件取消!");
     self.highlighted = NO;
 }
 

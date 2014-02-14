@@ -46,6 +46,10 @@
 		18B7151118AD23CD002E67F3 /* GMGridViewLayoutStrategies.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B7150A18AD23CD002E67F3 /* GMGridViewLayoutStrategies.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		18B7151218AD23CD002E67F3 /* UIGestureRecognizer+GMGridViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B7150C18AD23CD002E67F3 /* UIGestureRecognizer+GMGridViewAdditions.m */; };
 		18B7151318AD23CD002E67F3 /* UIView+GMGridViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B7150E18AD23CD002E67F3 /* UIView+GMGridViewAdditions.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		41691D2218ADF08600745FC3 /* FMSectionEditView.m in Sources */ = {isa = PBXBuildFile; fileRef = 41691D2118ADF08600745FC3 /* FMSectionEditView.m */; };
+		41691D2518ADF0E900745FC3 /* FMEditItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 41691D2418ADF0E900745FC3 /* FMEditItemView.m */; };
+		41691D2918AE08AD00745FC3 /* FMSectionEditViewLayOutStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 41691D2818AE08AD00745FC3 /* FMSectionEditViewLayOutStrategy.m */; };
+		4196741618ADB99C00A2C0F0 /* UIView+DAddition.m in Sources */ = {isa = PBXBuildFile; fileRef = 4196741518ADB99C00A2C0F0 /* UIView+DAddition.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -100,6 +104,14 @@
 		18B7150C18AD23CD002E67F3 /* UIGestureRecognizer+GMGridViewAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIGestureRecognizer+GMGridViewAdditions.m"; path = "GMGridView/UIGestureRecognizer+GMGridViewAdditions.m"; sourceTree = SOURCE_ROOT; };
 		18B7150D18AD23CD002E67F3 /* UIView+GMGridViewAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+GMGridViewAdditions.h"; path = "GMGridView/UIView+GMGridViewAdditions.h"; sourceTree = SOURCE_ROOT; };
 		18B7150E18AD23CD002E67F3 /* UIView+GMGridViewAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+GMGridViewAdditions.m"; path = "GMGridView/UIView+GMGridViewAdditions.m"; sourceTree = SOURCE_ROOT; };
+		41691D2018ADF08600745FC3 /* FMSectionEditView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMSectionEditView.h; sourceTree = "<group>"; };
+		41691D2118ADF08600745FC3 /* FMSectionEditView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMSectionEditView.m; sourceTree = "<group>"; };
+		41691D2318ADF0E900745FC3 /* FMEditItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMEditItemView.h; sourceTree = "<group>"; };
+		41691D2418ADF0E900745FC3 /* FMEditItemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMEditItemView.m; sourceTree = "<group>"; };
+		41691D2718AE08AD00745FC3 /* FMSectionEditViewLayOutStrategy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMSectionEditViewLayOutStrategy.h; sourceTree = "<group>"; };
+		41691D2818AE08AD00745FC3 /* FMSectionEditViewLayOutStrategy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMSectionEditViewLayOutStrategy.m; sourceTree = "<group>"; };
+		4196741418ADB99C00A2C0F0 /* UIView+DAddition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+DAddition.h"; sourceTree = "<group>"; };
+		4196741518ADB99C00A2C0F0 /* UIView+DAddition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+DAddition.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,6 +161,9 @@
 		188FED0C18AD0D510045F96E /* NewsColumns */ = {
 			isa = PBXGroup;
 			children = (
+				4196741418ADB99C00A2C0F0 /* UIView+DAddition.h */,
+				4196741518ADB99C00A2C0F0 /* UIView+DAddition.m */,
+				41691D1F18ADF05F00745FC3 /* FMNewsSectionEdit */,
 				18B7151418AD2485002E67F3 /* GMGridView */,
 				188FED1518AD0D510045F96E /* AppDelegate.h */,
 				188FED1618AD0D510045F96E /* AppDelegate.m */,
@@ -221,6 +236,19 @@
 			);
 			name = GMGridView;
 			sourceTree = "<group>";
+		};
+		41691D1F18ADF05F00745FC3 /* FMNewsSectionEdit */ = {
+			isa = PBXGroup;
+			children = (
+				41691D2018ADF08600745FC3 /* FMSectionEditView.h */,
+				41691D2118ADF08600745FC3 /* FMSectionEditView.m */,
+				41691D2318ADF0E900745FC3 /* FMEditItemView.h */,
+				41691D2418ADF0E900745FC3 /* FMEditItemView.m */,
+				41691D2718AE08AD00745FC3 /* FMSectionEditViewLayOutStrategy.h */,
+				41691D2818AE08AD00745FC3 /* FMSectionEditViewLayOutStrategy.m */,
+			);
+			path = FMNewsSectionEdit;
+			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
 
@@ -313,8 +341,12 @@
 				18B7150F18AD23CD002E67F3 /* GMGridView.m in Sources */,
 				188FED1318AD0D510045F96E /* main.m in Sources */,
 				188FED1718AD0D510045F96E /* AppDelegate.m in Sources */,
+				41691D2218ADF08600745FC3 /* FMSectionEditView.m in Sources */,
 				18B7151118AD23CD002E67F3 /* GMGridViewLayoutStrategies.m in Sources */,
+				4196741618ADB99C00A2C0F0 /* UIView+DAddition.m in Sources */,
+				41691D2918AE08AD00745FC3 /* FMSectionEditViewLayOutStrategy.m in Sources */,
 				188FED2018AD0D510045F96E /* ViewController.m in Sources */,
+				41691D2518ADF0E900745FC3 /* FMEditItemView.m in Sources */,
 				18B7151218AD23CD002E67F3 /* UIGestureRecognizer+GMGridViewAdditions.m in Sources */,
 				18B7151018AD23CD002E67F3 /* GMGridViewCell.m in Sources */,
 				18B7151318AD23CD002E67F3 /* UIView+GMGridViewAdditions.m in Sources */,
