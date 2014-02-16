@@ -30,7 +30,6 @@
     else{
         [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleBlackOpaque;
     }
-
     
     self.viewController = [[[ViewController alloc] initWithNibName:@"ViewController" bundle:nil] autorelease];
     

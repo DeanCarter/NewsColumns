@@ -20,12 +20,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NewsColumns/ViewController.m"
-            timestampString = "414003521.256132"
+            timestampString = "414257877.192307"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "159"
-            endingLineNumber = "159"
-            landmarkName = "-GMGridView:canDeleteItemAtIndex:"
+            startingLineNumber = "169"
+            endingLineNumber = "169"
+            landmarkName = "-operationButtonAction:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -36,12 +36,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NewsColumns/ViewController.m"
-            timestampString = "414003592.523964"
+            timestampString = "414257877.192307"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "186"
-            endingLineNumber = "186"
-            landmarkName = "-GMGridView:didStartMovingCell:"
+            startingLineNumber = "196"
+            endingLineNumber = "196"
+            landmarkName = "-GMGridView:cellForItemAtIndex:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -52,12 +52,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NewsColumns/ViewController.m"
-            timestampString = "414003600.010984"
+            timestampString = "414257877.192307"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "200"
-            endingLineNumber = "200"
-            landmarkName = "-GMGridView:didEndMovingCell:"
+            startingLineNumber = "210"
+            endingLineNumber = "210"
+            landmarkName = "-GMGridView:cellForItemAtIndex:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -73,7 +73,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "705"
             endingLineNumber = "705"
-            landmarkName = "-sortingMoveDidStartAtPoint:"
+            landmarkName = "-sortingAutoScrollMovementCheck"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -89,7 +89,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "536"
             endingLineNumber = "536"
-            landmarkName = "-longPressGestureUpdated:"
+            landmarkName = "-gestureRecognizerShouldBegin:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -105,7 +105,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "587"
             endingLineNumber = "587"
-            landmarkName = "-sortingPanGestureUpdated:"
+            landmarkName = "-longPressGestureUpdated:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -121,7 +121,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "621"
             endingLineNumber = "621"
-            landmarkName = "-sortingAutoScrollMovementCheck"
+            landmarkName = "-sortingPanGestureUpdated:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -137,7 +137,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "742"
             endingLineNumber = "742"
-            landmarkName = "-sortingMoveDidStopAtPoint:"
+            landmarkName = "-sortingMoveDidStartAtPoint:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -153,7 +153,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "778"
             endingLineNumber = "778"
-            landmarkName = "-sortingMoveDidContinueToPoint:"
+            landmarkName = "-sortingMoveDidStopAtPoint:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -169,7 +169,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "865"
             endingLineNumber = "865"
-            landmarkName = "-panGestureUpdated:"
+            landmarkName = "-sortingMoveDidContinueToPoint:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -185,7 +185,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "906"
             endingLineNumber = "906"
-            landmarkName = "-pinchGestureUpdated:"
+            landmarkName = "-panGestureUpdated:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -201,7 +201,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "966"
             endingLineNumber = "966"
-            landmarkName = "-rotationGestureUpdated:"
+            landmarkName = "-pinchGestureUpdated:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -217,7 +217,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1000"
             endingLineNumber = "1000"
-            landmarkName = "-transformingGestureDidBeginWithGesture:"
+            landmarkName = "-pinchGestureUpdated:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -233,7 +233,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1146"
             endingLineNumber = "1146"
-            landmarkName = "-tapGestureUpdated:"
+            landmarkName = "-transformingGestureDidFinish"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -249,7 +249,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1271"
             endingLineNumber = "1271"
-            landmarkName = "-recomputeSizeAnimated:"
+            landmarkName = "-itemSubviews"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -265,7 +265,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1304"
             endingLineNumber = "1304"
-            landmarkName = "-relayoutItemsAnimated:"
+            landmarkName = "-positionForItemSubview:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -281,7 +281,39 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "484"
             endingLineNumber = "484"
-            landmarkName = "-gestureRecognizerShouldBegin:"
+            landmarkName = "@implementation GMGridView"
+            landmarkType = "3">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "GMGridView/GMGridView.m"
+            timestampString = "414257819.501838"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "319"
+            endingLineNumber = "319"
+            landmarkName = "-layoutSubviews"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FMNewsSectionEdit/FMSectionEditView.m"
+            timestampString = "414259875.483585"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "221"
+            endingLineNumber = "221"
+            landmarkName = "-show"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

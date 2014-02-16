@@ -18,6 +18,10 @@
 		188FED1D18AD0D510045F96E /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 188FED1C18AD0D510045F96E /* Default-568h@2x.png */; };
 		188FED2018AD0D510045F96E /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 188FED1F18AD0D510045F96E /* ViewController.m */; };
 		188FED2318AD0D510045F96E /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 188FED2118AD0D510045F96E /* ViewController.xib */; };
+		1891821D18B10C010061B6DC /* FirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1891821B18B10C010061B6DC /* FirstViewController.m */; };
+		1891821E18B10C010061B6DC /* FirstViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1891821C18B10C010061B6DC /* FirstViewController.xib */; };
+		1891822118B10D4D0061B6DC /* FirstItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1891822018B10D4D0061B6DC /* FirstItemView.m */; };
+		1891822418B10DA30061B6DC /* FirstItemView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1891822318B10DA30061B6DC /* FirstItemView.xib */; };
 		18B714BA18AD1928002E67F3 /* loginview_loginbutton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 18B714B918AD1928002E67F3 /* loginview_loginbutton@2x.png */; };
 		18B714D118AD1B8F002E67F3 /* channel_button_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 18B714BC18AD1B8F002E67F3 /* channel_button_bg@2x.png */; };
 		18B714D218AD1B8F002E67F3 /* channel_button_delete@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 18B714BD18AD1B8F002E67F3 /* channel_button_delete@2x.png */; };
@@ -69,6 +73,12 @@
 		188FED1E18AD0D510045F96E /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		188FED1F18AD0D510045F96E /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		188FED2218AD0D510045F96E /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController.xib; sourceTree = "<group>"; };
+		1891821A18B10C010061B6DC /* FirstViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FirstViewController.h; sourceTree = "<group>"; };
+		1891821B18B10C010061B6DC /* FirstViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FirstViewController.m; sourceTree = "<group>"; };
+		1891821C18B10C010061B6DC /* FirstViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FirstViewController.xib; sourceTree = "<group>"; };
+		1891821F18B10D4D0061B6DC /* FirstItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FirstItemView.h; sourceTree = "<group>"; };
+		1891822018B10D4D0061B6DC /* FirstItemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FirstItemView.m; sourceTree = "<group>"; };
+		1891822318B10DA30061B6DC /* FirstItemView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FirstItemView.xib; sourceTree = "<group>"; };
 		18B714B918AD1928002E67F3 /* loginview_loginbutton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "loginview_loginbutton@2x.png"; sourceTree = "<group>"; };
 		18B714BC18AD1B8F002E67F3 /* channel_button_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "channel_button_bg@2x.png"; sourceTree = "<group>"; };
 		18B714BD18AD1B8F002E67F3 /* channel_button_delete@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "channel_button_delete@2x.png"; sourceTree = "<group>"; };
@@ -170,6 +180,12 @@
 				188FED1E18AD0D510045F96E /* ViewController.h */,
 				188FED1F18AD0D510045F96E /* ViewController.m */,
 				188FED2118AD0D510045F96E /* ViewController.xib */,
+				1891821A18B10C010061B6DC /* FirstViewController.h */,
+				1891821B18B10C010061B6DC /* FirstViewController.m */,
+				1891821C18B10C010061B6DC /* FirstViewController.xib */,
+				1891821F18B10D4D0061B6DC /* FirstItemView.h */,
+				1891822018B10D4D0061B6DC /* FirstItemView.m */,
+				1891822318B10DA30061B6DC /* FirstItemView.xib */,
 				188FED0D18AD0D510045F96E /* Supporting Files */,
 			);
 			path = NewsColumns;
@@ -310,6 +326,7 @@
 				188FED1918AD0D510045F96E /* Default.png in Resources */,
 				18B714D418AD1B8F002E67F3 /* channel_button_ok_inactive@2x.png in Resources */,
 				18B714DE18AD1B8F002E67F3 /* channel_placeholder_inactive@2x.png in Resources */,
+				1891822418B10DA30061B6DC /* FirstItemView.xib in Resources */,
 				18B714D118AD1B8F002E67F3 /* channel_button_bg@2x.png in Resources */,
 				188FED1B18AD0D510045F96E /* Default@2x.png in Resources */,
 				18B714DA18AD1B8F002E67F3 /* channel_edit_delete@2x.png in Resources */,
@@ -320,6 +337,7 @@
 				188FED1D18AD0D510045F96E /* Default-568h@2x.png in Resources */,
 				18B714E218AD1B8F002E67F3 /* channel_sidebar_button@2x.png in Resources */,
 				18B714E018AD1B8F002E67F3 /* channel_sidebar_button_red@2x.png in Resources */,
+				1891821E18B10C010061B6DC /* FirstViewController.xib in Resources */,
 				188FED2318AD0D510045F96E /* ViewController.xib in Resources */,
 				18B714BA18AD1928002E67F3 /* loginview_loginbutton@2x.png in Resources */,
 				18B714D218AD1B8F002E67F3 /* channel_button_delete@2x.png in Resources */,
@@ -345,8 +363,10 @@
 				18B7151118AD23CD002E67F3 /* GMGridViewLayoutStrategies.m in Sources */,
 				4196741618ADB99C00A2C0F0 /* UIView+DAddition.m in Sources */,
 				41691D2918AE08AD00745FC3 /* FMSectionEditViewLayOutStrategy.m in Sources */,
+				1891821D18B10C010061B6DC /* FirstViewController.m in Sources */,
 				188FED2018AD0D510045F96E /* ViewController.m in Sources */,
 				41691D2518ADF0E900745FC3 /* FMEditItemView.m in Sources */,
+				1891822118B10D4D0061B6DC /* FirstItemView.m in Sources */,
 				18B7151218AD23CD002E67F3 /* UIGestureRecognizer+GMGridViewAdditions.m in Sources */,
 				18B7151018AD23CD002E67F3 /* GMGridViewCell.m in Sources */,
 				18B7151318AD23CD002E67F3 /* UIView+GMGridViewAdditions.m in Sources */,

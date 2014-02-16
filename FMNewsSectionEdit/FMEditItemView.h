@@ -8,6 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
+@class FMEditItemView;
+typedef void(^FMEditItemViewDeleteBlock)(FMEditItemView *);
+
 @interface FMEditItemView : UIView
-@property (nonatomic, retain) UIView *contentView;
+@property (nonatomic, retain) IBOutlet UIView *contentView;
+
+@property (nonatomic, copy) FMEditItemViewDeleteBlock deleteBlock;
+
+@property (nonatomic, getter = isEditing) BOOL editing;
+- (void)setEditing:(BOOL)editing animated:(BOOL)animated;
+
 @end

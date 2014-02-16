@@ -19,13 +19,13 @@
     return self;
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
+- (void)setEditing:(BOOL)editing
 {
-    // Drawing code
+    [self setEditing:editing animated:NO];
 }
-*/
 
+- (void)setEditing:(BOOL)editing animated:(BOOL)animated
+{
+
+}
 @end

@@ -15,7 +15,10 @@
 @protocol FMSectionEditViewDataSource <NSObject>
 @required
 - (CGSize)sizeForSectionEditItemView:(FMSectionEditView *)sectionEditView ;
-- (NSInteger)numberOfItemsInFMSectionEditView:(FMSectionEditView *)sectionEditView;
+- (NSInteger)numberOfItemsInFMSectionEditView:(FMSectionEditView *)sectionEditView withIsSelectedView:(BOOL)flag;
+- (FMEditItemView *)fMSectionEditView:(FMSectionEditView *)sectionEditView itemViewForItemAtIndex:(NSInteger)index withIsSelectedView:(BOOL)flag;
+
+
 @optional
 - (UIView *)tipsViewForFMSectionEditView:(FMSectionEditView *)sectionEditView;
 - (BOOL)fMSectionEditView:(FMSectionEditView *)sectionEditView canDeleteItemAtIndex:(NSInteger)index;
@@ -37,8 +40,12 @@
 @property (nonatomic, assign) IBOutlet id<FMSectionEditViewDataSource> dataSource;
 @property (nonatomic, assign) IBOutlet id<FMSectionEditViewActionDelegate> actionDelegate;
 @property (nonatomic, getter = isEditing) BOOL editing;
+@property (nonatomic, readwrite) CGFloat borderWidthX;
+@property (nonatomic, readwrite) CGFloat borderHeightY;
 
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated;
+
+- (void)show;
 
 - (void)reloadSelectedData;
 - (void)reloadcandidateData;

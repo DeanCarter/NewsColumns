@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "GMGridView.h"
+#import "FirstViewController.h"
 
 
 @interface ViewController ()<GMGridViewActionDelegate, GMGridViewDataSource,GMGridViewSortingDelegate,GMGridViewTransformationDelegate>
@@ -111,11 +112,16 @@
     self.moreList = [NSMutableArray arrayWithObjects:@"电影",@"体育",@"彩票",@"微博",@"社会",@"历史",@"论坛",@"家居",@"真话",@"旅游",@"移动互联",@"教育",@"CBA",@"原创",@"养生",nil];
 
     [self initGridView];
-    
+    DLog(@"viewDidLoad");
+
 }
 
 
-
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    DLog(@"viewWillAppear");
+}
 
 - (void)didReceiveMemoryWarning
 {
@@ -149,6 +155,10 @@
 
 - (IBAction)arrowButtonAction:(UIButton *)sender {
     sender.selected = !sender.selected;
+    
+    FirstViewController *vc = [[FirstViewController alloc] initWithNibName:@"FirstViewController" bundle:nil];
+    [self.navigationController pushViewController:vc animated:YES];
+    [vc release];
 }
 
 - (IBAction)operationButtonAction:(UIButton *)sender {
