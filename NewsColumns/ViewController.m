@@ -17,6 +17,7 @@
 @property (retain, nonatomic) IBOutlet UILabel *tipsLabel;
 @property (retain, nonatomic) IBOutlet UIButton *operatoionButton;
 
+@property (retain, nonatomic) IBOutlet UIView *contentView;
 
 @property (retain, nonatomic) IBOutlet UIView *orderView;
 
@@ -40,7 +41,10 @@
 
 - (void)initGridView
 {
-    _orderGridView = [[GMGridView alloc] initWithFrame:(CGRect){0,0,self.view.frame.size.width, 200.f}];
+    _orderGridView = [[GMGridView alloc] initWithFrame:(CGRect){0,0,self.orderView.frame.size.width, self.orderView.size.height}];
+    
+    [self.orderGridView addObserver:self forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:NULL];
+    
     _orderGridView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     _orderGridView.backgroundColor = [UIColor yellowColor];
     [self.orderView addSubview:self.orderGridView];
@@ -56,8 +60,42 @@
     _orderGridView.transformDelegate = self;
     
     _orderGridView.mainSuperView = self.orderView;
+    
+    DLog(@"GridView ContentSize:   %@",NSStringFromCGSize(_orderGridView.contentSize));
+
+    
+    _moreGridView = [[GMGridView alloc] initWithFrame:(CGRect){0,0,self.view.frame.size.width, CGRectGetHeight(self.alternativeView.frame)}];
+    _moreGridView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    _moreGridView.backgroundColor = [UIColor yellowColor];
+    [self.alternativeView addSubview:self.moreGridView];
+    
+    _moreGridView.style = GMGridViewStyleSwap;
+    _moreGridView.itemSpacing = spacing;
+    _moreGridView.minEdgeInsets = UIEdgeInsetsMake(spacing, spacing, spacing, spacing);
+    _moreGridView.centerGrid = NO;
+    _moreGridView.sortingDelegate = self;
+    _moreGridView.actionDelegate = self;
+    _moreGridView.dataSource = self;
+    _moreGridView.transformDelegate = self;
+    
+    [self.moreGridView setCanEditing:NO];
+    
+    _moreGridView.mainSuperView = self.moreGridView;
+
 }
 
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    DLog(@"keyPath:  %@\n object:  %@\n",keyPath,object);
+    DLog(@"改变了OrderGridView的contentSize");
+    
+    self.orderView.height = self.orderGridView.contentSize.height;
+    
+    self.tipView.top = self.orderView.bottom + 10.f;
+    self.alternativeView.top = self.tipView.bottom;
+    self.alternativeView.height = self.contentView.height - self.tipView.bottom;
+}
 
 - (void)viewDidLoad
 {
@@ -70,7 +108,7 @@
     
     
     self.orderList = [NSMutableArray arrayWithObjects:@"头条",@"娱乐",@"财经",@"科技",@"手机",@"北京",@"军事",@"游戏",@"汽车",@"轻松一刻",@"房产",@"时尚",@"历史",nil];
-    self.moreList = [NSMutableArray arrayWithObjects:@"电影",@"体育",@"彩票",@"博",@"社会",@"历史",@"论坛",@"家居",@"真话",@"旅游",@"移动互联",@"教育",@"CBA",@"原创",@"养",nil];
+    self.moreList = [NSMutableArray arrayWithObjects:@"电影",@"体育",@"彩票",@"微博",@"社会",@"历史",@"论坛",@"家居",@"真话",@"旅游",@"移动互联",@"教育",@"CBA",@"原创",@"养生",nil];
 
     [self initGridView];
     
@@ -93,6 +131,7 @@
     [_orderView release];
     [_tipView release];
     [_alternativeView release];
+    [_contentView release];
     [super dealloc];
 }
 - (void)viewDidUnload {
@@ -103,6 +142,7 @@
     [self setOrderView:nil];
     [self setTipView:nil];
     [self setAlternativeView:nil];
+    [self setContentView:nil];
     [super viewDidUnload];
 }
 
@@ -111,11 +151,21 @@
     sender.selected = !sender.selected;
 }
 
+- (IBAction)operationButtonAction:(UIButton *)sender {
+    sender.selected = !sender.selected;
+    
+    self.orderGridView.editing = sender.selected;
+    [self.orderGridView layoutSubviewsWithAnimation:GMGridViewItemAnimationFade];
+    
+    self.tipView.hidden = sender.selected;
+    self.alternativeView.hidden = sender.selected;
+    
+}
 
 #pragma mark - GMGridViewDataSource
 - (NSInteger)numberOfItemsInGMGridView:(GMGridView *)gridView
 {
-    return self.orderList.count;
+    return   gridView == _orderGridView ? self.orderList.count : self.moreList.count;
 }
 
 - (CGSize)GMGridView:(GMGridView *)gridView sizeForItemsInInterfaceOrientation:(UIInterfaceOrientation)orientation
@@ -125,6 +175,9 @@
 
 - (GMGridViewCell *)GMGridView:(GMGridView *)gridView cellForItemAtIndex:(NSInteger)index
 {
+    if (gridView == _orderGridView) {
+        DLog(@"GridView ContentSize:   %@",NSStringFromCGSize(_orderGridView.contentSize));
+    }
     CGSize size = [self GMGridView:gridView sizeForItemsInInterfaceOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
     
     GMGridViewCell *cell = [gridView dequeueReusableCell];
@@ -145,7 +198,7 @@
     
     UILabel *label = [[UILabel alloc] initWithFrame:cell.contentView.bounds];
     label.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    label.text = (NSString *)[_orderList objectAtIndex:index];
+    label.text = (NSString *)[(gridView == _orderGridView ? _orderList : _moreList) objectAtIndex:index];
     label.textAlignment = UITextAlignmentCenter;
     label.backgroundColor = [UIColor clearColor];
     label.textColor = [UIColor blackColor];
@@ -158,8 +211,14 @@
 
 - (BOOL)GMGridView:(GMGridView *)gridView canDeleteItemAtIndex:(NSInteger)index
 {
+    if (gridView == _moreGridView) {
+        return NO;
+    }
     if (index == 0) {
         return NO;
+    }
+    if (!self.operatoionButton.selected) {
+        [self operationButtonAction: self.operatoionButton];
     }
     return YES; //index % 2 == 0;
 }
@@ -168,6 +227,14 @@
 - (void)GMGridView:(GMGridView *)gridView didTapOnItemAtIndex:(NSInteger)position
 {
     NSLog(@"Did tap at index %d", position);
+    if (gridView == _moreGridView) {
+        id selectedObj = [_moreList objectAtIndex:position];
+        [self.orderList addObject:selectedObj];
+        [_orderGridView reloadData];
+        
+        [_moreList removeObjectAtIndex:position];
+        [gridView removeObjectAtIndex:position withAnimation:GMGridViewItemAnimationFade];
+    }
 }
 
 - (void)GMGridViewDidTapOnEmptySpace:(GMGridView *)gridView
@@ -177,14 +244,29 @@
 
 - (void)GMGridView:(GMGridView *)gridView processDeleteActionForItemAtIndex:(NSInteger)index
 {
+    if (gridView == _moreGridView) {
+        return;
+    }
+
     if (index >= 0 && index < _orderList.count) {
+        
+        id deleteObj = [_orderList objectAtIndex:index];
+        [_moreList insertObject:deleteObj atIndex:0];
+        
         [_orderList removeObjectAtIndex:index];
         [gridView removeObjectAtIndex:index withAnimation:GMGridViewItemAnimationFade];
+        
+        
+        [_moreGridView reloadData];
     }
 }
 
 - (void)GMGridView:(GMGridView *)gridView didStartMovingCell:(GMGridViewCell *)cell
 {
+    if (gridView == _moreGridView) {
+        return;
+    }
+
     [UIView animateWithDuration:0.3
                           delay:0
                         options:UIViewAnimationOptionAllowUserInteraction
@@ -199,11 +281,15 @@
 
 - (void)GMGridView:(GMGridView *)gridView didEndMovingCell:(GMGridViewCell *)cell
 {
-    [UIView animateWithDuration:0.3
+    if (gridView == _moreGridView) {
+        return;
+    }
+
+    [UIView animateWithDuration:0.2
                           delay:0
                         options:UIViewAnimationOptionAllowUserInteraction
                      animations:^{
-                         cell.contentView.backgroundColor = [UIColor redColor];
+                         cell.contentView.backgroundColor = [UIColor clearColor];
                          cell.contentView.layer.shadowOpacity = 0;
                      }
                      completion:nil
@@ -217,6 +303,9 @@
 
 - (void)GMGridView:(GMGridView *)gridView moveItemAtIndex:(NSInteger)oldIndex toIndex:(NSInteger)newIndex
 {
+    if (gridView == _moreGridView) {
+        return;
+    }
     NSObject *object = [_orderList objectAtIndex:oldIndex];
     [_orderList removeObject:object];
     [_orderList insertObject:object atIndex:newIndex];
@@ -224,6 +313,10 @@
 
 - (void)GMGridView:(GMGridView *)gridView exchangeItemAtIndex:(NSInteger)index1 withItemAtIndex:(NSInteger)index2
 {
+    if (gridView == _moreGridView) {
+        return;
+    }
+
     [_orderList exchangeObjectAtIndex:index1 withObjectAtIndex:index2];
 }
 
@@ -261,6 +354,10 @@
 
 - (void)GMGridView:(GMGridView *)gridView didStartTransformingCell:(GMGridViewCell *)cell
 {
+    if (gridView == _moreGridView) {
+        return;
+    }
+
     [UIView animateWithDuration:0.5
                           delay:0
                         options:UIViewAnimationOptionAllowUserInteraction
@@ -273,6 +370,10 @@
 
 - (void)GMGridView:(GMGridView *)gridView didEndTransformingCell:(GMGridViewCell *)cell
 {
+    if (gridView == _moreGridView) {
+        return;
+    }
+
     [UIView animateWithDuration:0.5
                           delay:0
                         options:UIViewAnimationOptionAllowUserInteraction

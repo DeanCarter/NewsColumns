@@ -74,6 +74,8 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
     
     // Rotation
     BOOL _rotationActive;
+    
+    BOOL _canMoved;
 }
 
 @property (nonatomic, readonly) BOOL itemsSubviewsCacheIsValid;
@@ -253,6 +255,8 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
     _itemSize = CGSizeZero;
     _centerGrid = YES;
     
+    _canMoved = YES;
+    
     _lastScale = 1.0;
     _lastRotation = 0.0;
     
@@ -263,6 +267,25 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedMemoryWarningNotification:) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedWillRotateNotification:) name:UIApplicationWillChangeStatusBarOrientationNotification object:nil];
+}
+
+- (void)setCanEditing:(BOOL)isCanEditing
+{
+    if (isCanEditing) {
+        return;
+    }
+    if (_pinchGesture) {
+        [self removeGestureRecognizer:_pinchGesture];
+    }
+    if (_panGesture) {
+        [self removeGestureRecognizer:_panGesture];
+    }
+    if (_sortingPanGesture) {
+        [self removeGestureRecognizer:_sortingPanGesture];
+    }
+    if (_longPressGesture) {
+        [self removeGestureRecognizer:_longPressGesture];
+    }
 }
 
 - (void)dealloc
@@ -484,7 +507,8 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
 {    
     BOOL valid = YES;
-    return valid;
+//    //Dean修改
+//    return valid;
     BOOL isScrolling = self.isDragging || self.isDecelerating;
     
     if (gestureRecognizer == _tapGesture) 
@@ -500,7 +524,9 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
     }
     else if (gestureRecognizer == _longPressGesture)
     {
-        valid = (self.sortingDelegate || self.enableEditOnLongPress) && !isScrolling && !self.isEditing;
+        //Dean修改
+        valid = (self.sortingDelegate || self.enableEditOnLongPress) && !isScrolling;
+        //valid = (self.sortingDelegate || self.enableEditOnLongPress) && !isScrolling && !self.isEditing;
     }
     else if (gestureRecognizer == _sortingPanGesture) 
     {
@@ -586,6 +612,9 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
 
 - (void)sortingPanGestureUpdated:(UIPanGestureRecognizer *)panGesture
 {
+    if (!_canMoved) {
+        return;
+    }
     switch (panGesture.state) 
     {
         case UIGestureRecognizerStateEnded:
@@ -596,8 +625,9 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
             break;
         }
         case UIGestureRecognizerStateBegan:
-        {            
-            _autoScrollActive = YES;
+        {
+            //Dean修改
+            _autoScrollActive = NO;
             [self sortingAutoScrollMovementCheck];
             
             break;
@@ -718,7 +748,11 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
     [self.mainSuperView addSubview:_sortMovingItem];
     
     _sortFuturePosition = _sortMovingItem.tag - kTagOffset;
+    //Dean修改
     _sortMovingItem.tag = 0;
+    
+    //Dean添加
+    _canMoved = (position == 0 || position == GMGV_INVALID_POSITION) ? NO : YES;
     
     if ([self.sortingDelegate respondsToSelector:@selector(GMGridView:didStartMovingCell:)])
     {
@@ -751,6 +785,9 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
     _sortMovingItem.frame = frameInScroll;
     [self addSubview:_sortMovingItem];
     
+    //Dean修改
+    [_sortMovingItem setHighlighted:NO];
+    
     CGPoint newOrigin = [self.layoutStrategy originForItemAtPosition:_sortFuturePosition];
     CGRect newFrame = CGRectMake(newOrigin.x, newOrigin.y, _itemSize.width, _itemSize.height);
     
@@ -780,7 +817,8 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
     int position = [self.layoutStrategy itemPositionFromLocation:point];
     int tag = position + kTagOffset;
     
-    if (position != GMGV_INVALID_POSITION && position != _sortFuturePosition && position < _numberTotalItems) 
+    //Dean修改，增加position != 0判断
+    if (position != GMGV_INVALID_POSITION && position != _sortFuturePosition && position < _numberTotalItems && position != 0)
     {
         BOOL positionTaken = NO;
         
@@ -1265,6 +1303,7 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
 
 - (NSInteger)positionForItemSubview:(GMGridViewCell *)view
 {
+    NSLog(@"Cell.tag:  %d",view.tag);
     return view.tag >= kTagOffset ? view.tag - kTagOffset : GMGV_INVALID_POSITION;
 }
 
