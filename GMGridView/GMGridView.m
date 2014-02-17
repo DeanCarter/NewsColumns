@@ -312,6 +312,9 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
 - (void)layoutSubviewsWithAnimation:(GMGridViewItemAnimation)animation
 {
     [self recomputeSizeAnimated:!(animation & GMGridViewItemAnimationNone)];
+    if (animation & GMGridViewItemAnimationFade) {
+        DLog(@"执行了动画---------------------------------------");
+    }
     [self relayoutItemsAnimated:animation & GMGridViewItemAnimationFade]; // only supported animation for now
     [self loadRequiredItems];
 }

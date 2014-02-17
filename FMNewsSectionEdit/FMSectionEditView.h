@@ -64,6 +64,8 @@
 
 - (void)show;
 
+- (void)reloadData;
+
 - (void)reloadSelectedData;
 - (void)reloadcandidateData;
 

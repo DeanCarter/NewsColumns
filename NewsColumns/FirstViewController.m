@@ -106,6 +106,17 @@
 
 - (void)fMSelectionEditView:(FMSectionEditView *)sectionEditView didTapOnItemAtIndex:(NSInteger)position withIsSelectedView:(BOOL)flag
 {
+    if(flag) {
+        NSObject *object = [_selectedArray objectAtIndex:position];
+        [_selectedArray removeObject:object];
+        [_candidateArray insertObject:object atIndex:0];
+    }else {
+        NSObject *object = [_candidateArray objectAtIndex:position];
+        [_candidateArray removeObject:object];
+        [_selectedArray addObject:object];
+
+    }
+    [self.sectionEditView reloadData];
     DLog(@"%@  第%d个",(flag ? @"已选区": @"未选取"),position);
 }
 
@@ -114,9 +125,9 @@
                     toIndex:(NSInteger)newIndex
 {
     
-//    NSObject *object = [_orderList objectAtIndex:oldIndex];
-//    [_orderList removeObject:object];
-//    [_orderList insertObject:object atIndex:newIndex];
+    NSObject *object = [_selectedArray objectAtIndex:oldIndex];
+    [_selectedArray removeObject:object];
+    [_selectedArray insertObject:object atIndex:newIndex];
 }
 
 - (void)fmSelectionEditView:(FMSectionEditView *)sectionEditView

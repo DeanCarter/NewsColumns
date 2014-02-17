@@ -49,6 +49,9 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
 @property (nonatomic, retain) NSMutableArray *candidateArray;
 
 @property (nonatomic, retain) FMEditItemView *movingItemView;
+
+@property (nonatomic, assign) NSInteger firstPositionLoaded;
+@property (nonatomic, assign) NSInteger lastPositionLoaded;
 @end
 
 @implementation FMSectionEditView
@@ -119,6 +122,7 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
 {
     [super layoutSubviews];
     
+    //[self relayoutItemsAnimated:YES];
     [self show];
     
     CGSize itemSize = [self.dataSource sizeForSectionEditItemView:self];
@@ -136,9 +140,9 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
 {
     NSArray *subviews = nil;
     @synchronized(self) {
-        NSMutableArray *itemSubViews = [NSMutableArray arrayWithCapacity:_numOfTotalItem];
-        
-        for (UIView *v in (flag ? self.selectedView.subviews : self.candidateView.subviews)) {
+        NSMutableArray *itemSubViews = [NSMutableArray array];
+        UIView *view = flag ? self.selectedView : self.candidateView;
+        for (UIView *v in view.subviews) {
             if ([v isKindOfClass:[FMEditItemView class]]) {
                 [itemSubViews addObject:v];
             }
@@ -153,8 +157,10 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
 - (FMEditItemView *)lookForAppointItemView:(NSInteger)position withIsSelectedView:(BOOL)flag
 {
     FMEditItemView *itemView = nil;
-    for (UIView *v in (flag ? self.selectedView.subviews : self.candidateView.subviews)) {
-        if ([v isKindOfClass:[FMEditItemView class]] && v.tag == ((flag ? kEditeItemSelectedDefaultTag : kEditeItemCandidateDefaultTag) + position)) {
+    UIView *view = flag ? self.selectedView : self.candidateView;
+    NSInteger viewTag = flag ? (kEditeItemSelectedDefaultTag + position) : (kEditeItemCandidateDefaultTag + position);
+    for (UIView *v in view.subviews) {
+        if ([v isKindOfClass:[FMEditItemView class]] && v.tag == viewTag) {
             itemView = (FMEditItemView *)v;
             return itemView;
         }
@@ -165,13 +171,46 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
 - (void)relayoutItemsAnimated:(BOOL)animated
 {
     void (^layoutBlcok)(void) = ^{
-        for (UIView *v in [self itemSubViews]) {
+        for (UIView *v in [self itemSubViewsIsSelectedView:YES]) {
             if (v != _movingItemView) {
                 NSInteger index = v.tag - kEditeItemSelectedDefaultTag;
+                CGPoint origin = [self originForItemAtPosition:index];
+                CGRect newFrame = CGRectMake(origin.x, origin.y, self.itemSize.width, self.itemSize.height);
+                
+                if (!CGRectEqualToRect(newFrame, v.frame))
+                {
+                    v.frame = newFrame;
+                }
+
+            }
+        }
+        for (UIView *view in [self itemSubViewsIsSelectedView:NO]) {
+            if (view != _movingItemView) {
+                NSInteger index = view.tag - kEditeItemCandidateDefaultTag;
+                CGPoint origin = [self originForItemAtPosition:index];
+                CGRect newFrame = CGRectMake(origin.x, origin.y, self.itemSize.width, self.itemSize.height);
+                
+                if (!CGRectEqualToRect(newFrame, view.frame))
+                {
+                    view.frame = newFrame;
+                }
                 
             }
         }
     };
+    
+    if (animated) {
+        [UIView animateWithDuration:kDefaultAnimationDuration
+                              delay:0
+                            options:kDefaultAnimationOptions
+                         animations:^{
+                             layoutBlcok();
+                         }
+                         completion:nil
+         ];
+    }else {
+        layoutBlcok();
+    }
 }
 
 
@@ -223,32 +262,37 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
     CGFloat itemSpacing = (mainViewWidth - 2 * self.borderWidthX - self.numOfPerRow * self.itemSize.width) / ((CGFloat)(self.numOfPerRow - 1));
     
     
-    if (_numOfPerRow <= 0) {
+    if (self.numOfPerRow <= 0) {
         return;
     }
-    if (_numOfPerRow <= 0) {
+    if (self.numOfPerRow <= 0) {
 #warning 每行的个数不能少于1；
     }
-    if (_numOfPerRow > 0) {
+    if (self.numOfPerRow > 0) {
         NSInteger rowNums = (numOfTotal + (_numOfPerRow - 1))/_numOfPerRow;
         
         CGFloat selectedViewHeight = self.borderHeightY * 2 + _itemSize.height * rowNums + (rowNums - 1) * itemSpacing;
         self.selectedView.frame = CGRectMake(self.selectedView.frame.origin.x, self.selectedView.frame.origin.y, self.frame.size.width, selectedViewHeight);
         
         for (int i = 0; i < numOfTotal; i++) {
-            FMEditItemView *itemView = [[self newItemViewSubViewForPosition:i withIsSelectedView:YES] retain];
-            [self.selectedView addSubview:itemView];
-            [itemView release];
+            if (![self lookForAppointItemView:i withIsSelectedView:YES] && _firstPositionLoaded == 0) {
+                FMEditItemView *itemView = [[self newItemViewSubViewForPosition:i withIsSelectedView:YES] retain];
+                [self.selectedView addSubview:itemView];
+                [itemView release];
+            }
         }
         
     }else {
         self.selectedView.frame = CGRectMake(self.selectedView.frame.origin.x, self.selectedView.frame.origin.y, self.frame.size.width, 0.f);
     }
+    DLog(@"count: %d",self.selectedView.subviews.count);
+
     
     //添加TipsView
     if (self.dataSource && [self.dataSource respondsToSelector:@selector(tipsViewForFMSectionEditView:)]) {
         self.tipsView = [self.dataSource tipsViewForFMSectionEditView:self];
         self.tipsView.frame = CGRectMake(0, self.selectedView.frame.origin.y + self.selectedView.frame.size.height, self.tipsView.bounds.size.width, self.tipsView.bounds.size.height);
+        [self.tipsView removeFromSuperview];
         [self addSubview:self.tipsView];
         [self sendSubviewToBack:self.tipsView];
     }
@@ -264,14 +308,21 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
         self.candidateView.contentSize = CGSizeMake(self.candidateView.frame.size.width, selectedViewHeight);
         
         for (int position = 0; position < allCandidateNums; position++) {
-            FMEditItemView *itemView = [[self newItemViewSubViewForPosition:position withIsSelectedView:NO] retain];
-            [self.candidateView addSubview:itemView];
-            [itemView release];
+            if (![self lookForAppointItemView:position withIsSelectedView:NO]) {
+                FMEditItemView *itemView = [[self newItemViewSubViewForPosition:position withIsSelectedView:NO] retain];
+                [self.candidateView addSubview:itemView];
+                [itemView release];
+            }
         }
     }
     
 }
 
+
+- (void)reloadData
+{
+    [self show];
+}
 
 - (FMEditItemView *)newItemViewSubViewForPosition:(NSInteger)position withIsSelectedView:(BOOL)flag
 {
@@ -281,7 +332,7 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
     //当前ItemView所在的行
     NSInteger  currentRow = position/self.numOfPerRow;
     
-    DLog(@"当前所在位置： 第%d行  第%d列",currentRow,currentCol);
+    //DLog(@"当前所在位置： 第%d行  第%d列",currentRow,currentCol);
     
     FMEditItemView *itemView = [[self.dataSource fMSectionEditView:self itemViewForItemAtIndex:position withIsSelectedView:flag] retain];
     itemView.frame = CGRectMake((_borderWidthX + (self.itemSize.width + [self itemSpacing]) * currentCol) , (_borderHeightY + (self.itemSize.height + [self itemSpacing ]) * currentRow),self.itemSize.width,self.itemSize.height);
@@ -412,11 +463,12 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
 
 - (void)longPressGestureUpdated:(UILongPressGestureRecognizer *)longPressGesture
 {
+    
     if (self.enableEditOnLongPress && !self.editing) {
-        CGPoint locationTouch = [longPressGesture locationInView:self];
+        CGPoint locationTouch = [longPressGesture locationInView:self.selectedView];
         NSInteger position = [self positionForCurrentLocation:locationTouch isSelectedView:YES];
         
-        if (position != kFM_INVALID_POSITION) {
+        if (position != kFM_INVALID_POSITION && position != 0 && position != 1) {
             if (!self.editing) {
                 self.editing = YES;
             }
@@ -427,7 +479,7 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
         case UIGestureRecognizerStateBegan:
         {
             if (!_movingItemView) {
-                CGPoint locationTouch = [longPressGesture locationInView:self];
+                CGPoint locationTouch = [longPressGesture locationInView:self.selectedView];
                 NSInteger position = [self positionForCurrentLocation:locationTouch isSelectedView:YES];
                 
                 if (position != kFM_INVALID_POSITION) {
@@ -472,9 +524,9 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
             break;
         case UIGestureRecognizerStateChanged:
         {
-            CGPoint translation = [panGesture translationInView:self];
+            CGPoint translation = [panGesture translationInView:self.selectedView];
             CGPoint offset = translation;
-            CGPoint locationInScroll = [panGesture locationInView:self];
+            CGPoint locationInScroll = [panGesture locationInView:self.selectedView];
             
             self.movingItemView.transform = CGAffineTransformMakeTranslation(offset.x, offset.y);
             [self sortingMoveDidContinueToPoint:locationInScroll];
@@ -489,8 +541,21 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
 
 - (void)tapGestureUpdatedForcandidateView:(UITapGestureRecognizer *)tapGesture
 {
+    CGPoint locationTouch = [tapGesture locationInView:self.candidateView];
     
+    NSInteger position = [self positionForCurrentLocation:locationTouch isSelectedView:NO];
+    
+    if (position != kFM_INVALID_POSITION) {
+        if (self.actionDelegate && [self.actionDelegate respondsToSelector:@selector(fMSelectionEditView:didTapOnItemAtIndex:withIsSelectedView:)]) {
+            if (!self.editing) {
+                [self lookForAppointItemView:position withIsSelectedView:YES].highlighted = NO;
+            }
+            [self.actionDelegate fMSelectionEditView:self didTapOnItemAtIndex:position withIsSelectedView:NO];
+        }
+    }
 }
+
+
 
 #pragma mark -- 根据传进来的index得到对于ItemView的origin
 - (CGPoint)originForItemAtPosition:(NSInteger)position
@@ -508,36 +573,30 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
 
 - (void)sortingMoveDidStartAtPoint:(CGPoint)point
 {
-    NSInteger position = [self positionForCurrentLocation:point];
-
-    NSInteger flag = 0;
-    if (CGRectContainsPoint(self.selectedView.frame, point)) {
-        flag = 1;
-    }else if (CGRectContainsPoint(self.candidateView.frame, point)) {
-        flag = 2;
-    }else {
-        flag = 3;
-    }
+    NSInteger position = [self positionForCurrentLocation:point isSelectedView:YES];
     
-    BOOL isSelectedView = (flag == 1 ? YES : NO);
-    
-    UIView *view = isSelectedView ? self.selectedView : self.candidateView;
-    
-    FMEditItemView *itemView = [self lookForAppointItemView:position withIsSelectedView:isSelectedView];
+    FMEditItemView *itemView = [self lookForAppointItemView:position withIsSelectedView:YES];
     self.movingItemView = itemView;
     
-    CGRect frameInMainView = [view convertRect:self.movingItemView.frame toView:self];
+    CGRect frameInMainView = [self.selectedView convertRect:self.movingItemView.frame toView:self];
     [itemView removeFromSuperview];
+    
+    if ([self.selectedView.subviews containsObject:itemView]) {
+        DLog(@"没有被移除掉！");
+    }
+    
     self.movingItemView.frame = frameInMainView;
     [self addSubview:self.movingItemView];
-    [self bringSubviewToFront:self.movingItemView];
+   // [self bringSubviewToFront:self.movingItemView];
     
     self.movingItemView.backgroundColor = [UIColor redColor];
     
-    _sortFuturePosition = self.movingItemView.tag - (isSelectedView ? kEditeItemSelectedDefaultTag : kEditeItemCandidateDefaultTag);
+    self.firstPositionLoaded = position;
+    
+    _sortFuturePosition = position;
     
     _canMoved = YES;
-    if ((isSelectedView && position == 0) || position == kFM_INVALID_POSITION) {
+    if (position == 0 || position == 1 || position == kFM_INVALID_POSITION) {
         _canMoved = NO;
     }
     
@@ -553,24 +612,15 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
 
 - (void)sortingMoveDidContinueToPoint:(CGPoint)point
 {
-    int position = [self positionForCurrentLocation:point];
+    int position = [self positionForCurrentLocation:point isSelectedView:YES];
     
-    NSInteger flag = 0;
-    if (CGRectContainsPoint(self.selectedView.frame, point)) {
-        flag = 1;
-    }else if (CGRectContainsPoint(self.candidateView.frame, point)) {
-        flag = 2;
-    }else {
-        flag = 3;
-    }
+    int tag = kEditeItemSelectedDefaultTag + position;
     
-    BOOL isSelectedView = (flag == 1 ? YES : NO);
-    int tag = (isSelectedView ? kEditeItemSelectedDefaultTag : kEditeItemCandidateDefaultTag) + position;
-    
-    if (position != kFM_INVALID_POSITION && !(position == 0 && isSelectedView) && position != _sortFuturePosition && position < ([self.dataSource numberOfItemsInFMSectionEditView:self withIsSelectedView:isSelectedView])) {
+    if (position != kFM_INVALID_POSITION && position != 0 && position != 1 && position != _sortFuturePosition && position < ([self.dataSource numberOfItemsInFMSectionEditView:self withIsSelectedView:YES])) {
         BOOL positionToken = NO;
-        
-        for (UIView *v in [self itemSubViewsIsSelectedView:isSelectedView]) {
+        NSArray *array = [self itemSubViewsIsSelectedView:YES];
+        DLog(@"还有%d个itemView",array.count);
+        for (UIView *v in [self itemSubViewsIsSelectedView:YES]) {
             if (v != _movingItemView && v.tag == tag) {
                 positionToken = YES;
                 break;
@@ -579,9 +629,9 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
         
         if (positionToken) {
             if (_movingItemView) {
-                FMEditItemView *v = [self lookForAppointItemView:position withIsSelectedView:isSelectedView];
+                FMEditItemView *v = [self lookForAppointItemView:position withIsSelectedView:YES];
                 
-                v.tag = _sortFuturePosition + (isSelectedView ? kEditeItemSelectedDefaultTag : kEditeItemCandidateDefaultTag);
+                v.tag = _sortFuturePosition + kEditeItemSelectedDefaultTag;
                 CGPoint orgin = [self originForItemAtPosition:_sortFuturePosition];
                 
                 [UIView animateWithDuration:kDefaultAnimationDuration
@@ -613,9 +663,11 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
     }
     
     BOOL isSelectedView = (flag == 1 ? YES : NO);
-    self.movingItemView.tag = _sortFuturePosition + (isSelectedView ? kEditeItemSelectedDefaultTag : kEditeItemCandidateDefaultTag);
     UIView *view = isSelectedView ? self.selectedView : self.candidateView;
-    CGRect frameInScroll = [self convertRect:self.movingItemView.frame toView:view];
+
+    
+    self.movingItemView.tag = _sortFuturePosition + kEditeItemSelectedDefaultTag;
+    CGRect frameInScroll = [self convertRect:self.movingItemView.frame toView:self.selectedView];
     [_movingItemView removeFromSuperview];
     self.movingItemView.frame = frameInScroll;
     [view addSubview:self.movingItemView];
@@ -650,4 +702,15 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
 {
     
 }
+
+- (void)insertObjectAtIndex:(NSInteger)index animated:(BOOL)animated withIsSelectedView:(BOOL)flag
+{
+    NSAssert((index >= 0 && index <= [self.dataSource numberOfItemsInFMSectionEditView:self withIsSelectedView:flag]), @"Invalid index specified");
+    
+    FMEditItemView *itemView = [self.dataSource fMSectionEditView:self itemViewForItemAtIndex:index withIsSelectedView:flag];
+    CGPoint newOrigin = [self originForItemAtPosition:index];
+    itemView.frame = CGRectMake(newOrigin.x, newOrigin.y, self.itemSize.width, self.itemSize.height);
+    
+}
+
 @end
