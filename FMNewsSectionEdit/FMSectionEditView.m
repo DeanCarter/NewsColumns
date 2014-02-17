@@ -40,7 +40,8 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
 @property (nonatomic, retain) UIView *tipsView;
 @property (nonatomic, retain) UIScrollView *candidateView; //候选栏目视图
 
-@property (nonatomic, retain) UITapGestureRecognizer *tapGesture;
+@property (nonatomic, retain) UITapGestureRecognizer *selectedViewTapGesture;
+@property (nonatomic, retain) UITapGestureRecognizer *candidateViewTapGesture;
 @property (nonatomic, retain) UILongPressGestureRecognizer *longPressGesture;
 @property (nonatomic, retain) UIPanGestureRecognizer *panGesture;
 
@@ -78,23 +79,6 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
 
 - (void)commonInit
 {
-    _tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureUpdated:)];
-    _tapGesture.delegate = self;
-    _tapGesture.numberOfTapsRequired = 1;
-    _tapGesture.numberOfTouchesRequired = 1;
-    _tapGesture.cancelsTouchesInView = NO;
-    [self addGestureRecognizer:_tapGesture];
-    
-    _longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressGestureUpdated:)];
-    _longPressGesture.delegate = self;
-    _longPressGesture.numberOfTouchesRequired = 1;
-    _longPressGesture.cancelsTouchesInView = NO;
-    [self addGestureRecognizer:_longPressGesture];
-    
-    _panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureUpdated:)];
-    _panGesture.delegate = self;
-    [self addGestureRecognizer:_panGesture];
-    
     _selectedView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.frame), 0)];
     _selectedView.backgroundColor = [UIColor yellowColor];
     [self addSubview:_selectedView];
@@ -103,8 +87,29 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
     _candidateView.backgroundColor = [UIColor clearColor];
     [self addSubview:_candidateView];
     
-    _enableEditOnLongPress = NO;
-    _editing = NO;
+    _selectedViewTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureUpdatedForSelectedView:)];
+    _selectedViewTapGesture.delegate = self;
+    _selectedViewTapGesture.numberOfTapsRequired = 1;
+    _selectedViewTapGesture.numberOfTouchesRequired = 1;
+    _selectedViewTapGesture.cancelsTouchesInView = NO;
+    [self.selectedView addGestureRecognizer:_selectedViewTapGesture];
+    
+    _candidateViewTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureUpdatedForcandidateView:)];
+    _candidateViewTapGesture.delegate = self;
+    _candidateViewTapGesture.numberOfTapsRequired = 1;
+    _candidateViewTapGesture.numberOfTouchesRequired = 1;
+    _candidateViewTapGesture.cancelsTouchesInView = NO;
+    [self.candidateView addGestureRecognizer:_candidateViewTapGesture];
+    
+    _longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressGestureUpdated:)];
+    _longPressGesture.delegate = self;
+    _longPressGesture.numberOfTouchesRequired = 1;
+    _longPressGesture.cancelsTouchesInView = NO;
+    [self.selectedView addGestureRecognizer:_longPressGesture];
+    
+    _panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureUpdated:)];
+    _panGesture.delegate = self;
+    [self.selectedView addGestureRecognizer:_panGesture];
     
     _borderWidthX = 0.f;
     _borderHeightY = 0.f;
@@ -178,9 +183,9 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
     return _numOfPerRow;
 }
 
-- (NSInteger)numOfTotalRow
+- (NSInteger)numOfTotalRowIsSelectedView:(BOOL)flag
 {
-    NSInteger numOfTotal = [self.dataSource numberOfItemsInFMSectionEditView:self withIsSelectedView:YES];
+    NSInteger numOfTotal = [self.dataSource numberOfItemsInFMSectionEditView:self withIsSelectedView:flag];
     
     NSInteger rowNums = self.numOfPerRow  ? (numOfTotal + (self.numOfPerRow - 1)) / (self.numOfPerRow) : 0;
     
@@ -327,27 +332,16 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
     }
 }
 
-- (NSInteger)positionForCurrentLocation:(CGPoint)locationTouch
+- (NSInteger)positionForCurrentLocation:(CGPoint)locationTouch isSelectedView:(BOOL)flag
 {
-    NSInteger flag = 0;
-    if (CGRectContainsPoint(self.selectedView.frame, locationTouch)) {
-        flag = 1;
-    }else if (CGRectContainsPoint(self.candidateView.frame, locationTouch)) {
-        flag = 2;
-    }else {
-        flag = 3;
-        return kFM_INVALID_POSITION;
-    }
     
-    BOOL isSelectedView = flag == 1 ? YES : NO;
-    
-    CGPoint relativeLocation = [self convertPoint:locationTouch toView:isSelectedView ? self.selectedView : self.candidateView];
+    CGPoint relativeLocation = CGPointMake(locationTouch.x - self.borderWidthX, locationTouch.y - self.borderHeightY);
     //列
-    int col = (int)((relativeLocation.x - self.borderWidthX))/(self.itemSize.width + [self itemSpacing]);
+    int col = (int)(relativeLocation.x)/(self.itemSize.width + [self itemSpacing]);
     //行
-    int row = (int)((relativeLocation.y - self.borderHeightY))/(self.itemSize.height + [self itemSpacing]);
+    int row = (int)(relativeLocation.y)/(self.itemSize.height + [self itemSpacing]);
     int position = col + row * self.numOfPerRow;
-    if (position >= [self.dataSource numberOfItemsInFMSectionEditView:self withIsSelectedView:isSelectedView] || position < 0) {
+    if (position >= [self.dataSource numberOfItemsInFMSectionEditView:self withIsSelectedView:flag] || position < 0) {
         position = kFM_INVALID_POSITION;
     }else {
         CGPoint itemOrigin = [self originForItemAtPosition:position];
@@ -375,7 +369,7 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
 {
     BOOL valid = YES;
     
-    if (gestureRecognizer == _tapGesture)
+    if (gestureRecognizer == _selectedViewTapGesture)
     {
         valid = ![_longPressGesture hasRecognizedValidGesture];
     }
@@ -388,6 +382,8 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
     else if (gestureRecognizer == _panGesture)
     {
         valid = (self.movingItemView != nil && [_longPressGesture hasRecognizedValidGesture]);
+    }else if (gestureRecognizer == _candidateViewTapGesture) {
+        valid = YES;
     }
     else
     {
@@ -398,30 +394,18 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
 }
 
 
-- (void)tapGestureUpdated:(UITapGestureRecognizer *)tapGesture
+- (void)tapGestureUpdatedForSelectedView:(UITapGestureRecognizer *)tapGesture
 {
-    CGPoint locationTouch = [tapGesture locationInView:self];
+    CGPoint locationTouch = [tapGesture locationInView:self.selectedView];
 
-    NSInteger position = [self positionForCurrentLocation:locationTouch];
-    NSInteger flag = 0;
+    NSInteger position = [self positionForCurrentLocation:locationTouch isSelectedView:YES];
     
-    if (CGRectContainsPoint(self.selectedView.frame, locationTouch)) {
-        flag = 1;
-    }else if (CGRectContainsPoint(self.candidateView.frame, locationTouch)) {
-        flag = 2;
-    }else {
-        flag = 3;
-        return;
-    }
-    
-    BOOL isSelectedView = (flag == 1 ? YES : NO);
-
     if (position != kFM_INVALID_POSITION) {
         if (self.actionDelegate && [self.actionDelegate respondsToSelector:@selector(fMSelectionEditView:didTapOnItemAtIndex:withIsSelectedView:)]) {
             if (!self.editing) {
-                [self lookForAppointItemView:position withIsSelectedView:isSelectedView].highlighted = NO;
+                [self lookForAppointItemView:position withIsSelectedView:YES].highlighted = NO;
             }
-            [self.actionDelegate fMSelectionEditView:self didTapOnItemAtIndex:position withIsSelectedView:isSelectedView];
+            [self.actionDelegate fMSelectionEditView:self didTapOnItemAtIndex:position withIsSelectedView:YES];
         }
     }
 }
@@ -430,7 +414,7 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
 {
     if (self.enableEditOnLongPress && !self.editing) {
         CGPoint locationTouch = [longPressGesture locationInView:self];
-        NSInteger position = [self positionForCurrentLocation:locationTouch];
+        NSInteger position = [self positionForCurrentLocation:locationTouch isSelectedView:YES];
         
         if (position != kFM_INVALID_POSITION) {
             if (!self.editing) {
@@ -444,7 +428,7 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
         {
             if (!_movingItemView) {
                 CGPoint locationTouch = [longPressGesture locationInView:self];
-                NSInteger position = [self positionForCurrentLocation:locationTouch];
+                NSInteger position = [self positionForCurrentLocation:locationTouch isSelectedView:YES];
                 
                 if (position != kFM_INVALID_POSITION) {
                     [self sortingMoveDidStartAtPoint:locationTouch];
@@ -500,6 +484,12 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
         default:
             break;
     }
+}
+
+
+- (void)tapGestureUpdatedForcandidateView:(UITapGestureRecognizer *)tapGesture
+{
+    
 }
 
 #pragma mark -- 根据传进来的index得到对于ItemView的origin
