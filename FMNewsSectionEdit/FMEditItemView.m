@@ -7,6 +7,7 @@
 //
 
 #import "FMEditItemView.h"
+#import "UIView+GMGridViewAdditions.h"
 
 @implementation FMEditItemView
 
@@ -28,4 +29,16 @@
 {
 
 }
+
+- (void)setHighlighted:(BOOL)aHighlighted
+{
+    _highlighted = aHighlighted;
+    
+    [self.contentView recursiveEnumerateSubviewsUsingBlock:^(UIView *view, BOOL *stop) {
+        if ([view respondsToSelector:@selector(setHighlighted:)]) {
+            [(UIControl *)view setHighlighted:aHighlighted];
+        }
+    }];
+}
+
 @end

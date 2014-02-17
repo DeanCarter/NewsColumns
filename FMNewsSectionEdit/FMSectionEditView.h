@@ -29,17 +29,34 @@
 @protocol FMSectionEditViewActionDelegate <NSObject>
 @required
 - (void)fMSelectionEditView:(FMSectionEditView *)sectionEditView
-        didTapOnItemAtIndex:(NSInteger)position;
+        didTapOnItemAtIndex:(NSInteger)position
+         withIsSelectedView:(BOOL)flag;
 @optional
 - (void)fMSelectionEditView:(FMSectionEditView *)sectionEditView deleteActionForItemAtIndex:(NSInteger)index;
+
 @end
 
+@protocol FMSectionEditViewSortDelegate <NSObject>
+@required
+- (void)fmSelectionEditView:(FMSectionEditView *)sectionEditView
+            moveItemAtIndex:(NSInteger)oldIndex
+                    toIndex:(NSInteger)newIndex;
+- (void)fmSelectionEditView:(FMSectionEditView *)sectionEditView
+        exchangeItemAtIndex:(NSInteger)oldIndex
+            withItemAtIndex:(NSInteger)newIndex;
+@optional
+- (void)fMSelectionEditView:(FMSectionEditView *)sectionEditView didStartMovingItemView:(FMEditItemView *)itemView;
+- (void)fMSelectionEditView:(FMSectionEditView *)sectionEditView didEndMovingItemView:(FMEditItemView *)itemView;
+
+@end
 
 
 @interface FMSectionEditView : UIView
 @property (nonatomic, assign) IBOutlet id<FMSectionEditViewDataSource> dataSource;
 @property (nonatomic, assign) IBOutlet id<FMSectionEditViewActionDelegate> actionDelegate;
+@property (nonatomic, assign) IBOutlet id<FMSectionEditViewSortDelegate> sortDelegate;
 @property (nonatomic, getter = isEditing) BOOL editing;
+@property (nonatomic) BOOL enableEditOnLongPress;
 @property (nonatomic, readwrite) CGFloat borderWidthX;
 @property (nonatomic, readwrite) CGFloat borderHeightY;
 

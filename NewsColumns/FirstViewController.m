@@ -10,7 +10,7 @@
 #import "FMSectionEditView.h"
 #import "FirstItemView.h"
 
-@interface FirstViewController ()<FMSectionEditViewActionDelegate,FMSectionEditViewDataSource>
+@interface FirstViewController ()<FMSectionEditViewActionDelegate,FMSectionEditViewDataSource,FMSectionEditViewSortDelegate>
 @property (retain, nonatomic) IBOutlet UIButton *backBtn;
 @property (retain, nonatomic) NSMutableArray *selectedArray;
 @property (retain, nonatomic) NSMutableArray *candidateArray;
@@ -80,6 +80,23 @@
     return flag ? self.selectedArray.count : self.candidateArray.count;
 }
 
+
+- (UIView *)tipsViewForFMSectionEditView:(FMSectionEditView *)sectionEditView
+{
+    UIView *view = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 40)] autorelease];
+    view.backgroundColor = [UIColor grayColor];
+    
+    UILabel *tipsLabel = [[UILabel alloc] initWithFrame:view.bounds];
+    tipsLabel.textColor = [UIColor whiteColor];
+    tipsLabel.textAlignment = UITextAlignmentCenter;
+    tipsLabel.backgroundColor = [UIColor clearColor];
+    tipsLabel.text = @"———— 点击增删 拖曳排序 ————";
+    [view addSubview:tipsLabel];
+    [tipsLabel release];
+    
+    return view;
+}
+
 - (FMEditItemView *)fMSectionEditView:(FMSectionEditView *)sectionEditView itemViewForItemAtIndex:(NSInteger)index withIsSelectedView:(BOOL)flag
 {
     FirstItemView *itemView = (FirstItemView *)[FirstItemView loadViewFromXib];
@@ -87,10 +104,27 @@
     return itemView;
 }
 
-- (void)fMSelectionEditView:(FMSectionEditView *)sectionEditView didTapOnItemAtIndex:(NSInteger)position
+- (void)fMSelectionEditView:(FMSectionEditView *)sectionEditView didTapOnItemAtIndex:(NSInteger)position withIsSelectedView:(BOOL)flag
 {
-    
+    DLog(@"%@  第%d个",(flag ? @"已选区": @"未选取"),position);
 }
 
+- (void)fmSelectionEditView:(FMSectionEditView *)sectionEditView
+            moveItemAtIndex:(NSInteger)oldIndex
+                    toIndex:(NSInteger)newIndex
+{
+    
+//    NSObject *object = [_orderList objectAtIndex:oldIndex];
+//    [_orderList removeObject:object];
+//    [_orderList insertObject:object atIndex:newIndex];
+}
+
+- (void)fmSelectionEditView:(FMSectionEditView *)sectionEditView
+        exchangeItemAtIndex:(NSInteger)oldIndex
+            withItemAtIndex:(NSInteger)newIndex;
+{
+    
+ //   [_orderList exchangeObjectAtIndex:index1 withObjectAtIndex:index2];
+}
 
 @end

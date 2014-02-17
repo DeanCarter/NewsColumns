@@ -36,6 +36,7 @@
                     <connections>
                         <outlet property="actionDelegate" destination="-1" id="ijz-pR-Rgi"/>
                         <outlet property="dataSource" destination="-1" id="DcQ-Bj-3Lc"/>
+                        <outlet property="sortDelegate" destination="-1" id="rEn-Aw-Xyg"/>
                     </connections>
                 </view>
             </subviews>

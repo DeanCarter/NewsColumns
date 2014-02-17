@@ -16,6 +16,8 @@ typedef void(^FMEditItemViewDeleteBlock)(FMEditItemView *);
 
 @property (nonatomic, copy) FMEditItemViewDeleteBlock deleteBlock;
 
+@property (nonatomic, getter = isHighlighted) BOOL highlighted;
+
 @property (nonatomic, getter = isEditing) BOOL editing;
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated;
 
