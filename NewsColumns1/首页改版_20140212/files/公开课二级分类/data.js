@@ -1,0 +1,73 @@
+﻿$axure.loadCurrentPage({
+  "url":"公开课二级分类.html",
+  "generationDate":new Date(1392372077858.46),
+  "isCanvasEnabled":false,
+  "variables":["OnLoadVariable"],
+  "page":{
+    "packageId":"47fe2b00b2e4423f8be09f7ae0e4c29f",
+    "type":"Axure:Page",
+    "name":"公开课二级分类",
+    "notes":{
+},
+    "style":{
+      "baseStyle":"627587b6038d43cca051c114ac41ad32",
+      "pageAlignment":"near",
+      "fill":{
+        "fillType":"solid",
+        "color":0xFFFFFFFF},
+      "image":null,
+      "imageHorizontalAlignment":"near",
+      "imageVerticalAlignment":"near",
+      "imageRepeat":"auto",
+      "favicon":null,
+      "sketchFactor":"0",
+      "colorStyle":"appliedColor",
+      "fontName":"Applied Font",
+      "borderWidth":"0"},
+    "adaptiveStyles":{
+},
+    "interactionMap":{
+},
+    "diagram":{
+      "objects":[{
+          "id":"36f26941e5e0478f902dd01126302795",
+          "label":"",
+          "type":"buttonShape",
+          "styleType":"paragraph",
+          "visible":true,
+          "style":{
+            "fontName":"'Applied Font Regular', 'Applied Font'",
+            "location":{
+              "x":50,
+              "y":56},
+            "size":{
+              "width":300,
+              "height":128}},
+          "adaptiveStyles":{
+},
+          "objects":[{
+              "id":"394d5397e38247d196d9862689fc510a",
+              "label":"",
+              "isContained":true,
+              "type":"richTextPanel",
+              "styleType":"paragraph",
+              "visible":true,
+              "style":{
+                "fontName":"'Applied Font Regular', 'Applied Font'",
+                "location":{
+                  "x":50,
+                  "y":56},
+                "size":{
+                  "width":300,
+                  "height":128}},
+              "adaptiveStyles":{
+}}],
+          "images":{
+            "normal~":"resources/images/transparent.gif"}}]}},
+  "masters":{
+},
+  "objectPaths":{
+    "36f26941e5e0478f902dd01126302795":{
+      "scriptId":"u0"},
+    "394d5397e38247d196d9862689fc510a":{
+      "scriptId":"u1"}}});

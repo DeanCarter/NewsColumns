@@ -1,0 +1,73 @@
+﻿$axure.loadCurrentPage({
+  "url":"有声书及公开课默认进推荐列表.html",
+  "generationDate":new Date(1392372079156.46),
+  "isCanvasEnabled":false,
+  "variables":["OnLoadVariable"],
+  "page":{
+    "packageId":"aea85638d8a24ef68f5ba722406ca9b1",
+    "type":"Axure:Page",
+    "name":"有声书及公开课默认进推荐列表",
+    "notes":{
+},
+    "style":{
+      "baseStyle":"627587b6038d43cca051c114ac41ad32",
+      "pageAlignment":"near",
+      "fill":{
+        "fillType":"solid",
+        "color":0xFFFFFFFF},
+      "image":null,
+      "imageHorizontalAlignment":"near",
+      "imageVerticalAlignment":"near",
+      "imageRepeat":"auto",
+      "favicon":null,
+      "sketchFactor":"0",
+      "colorStyle":"appliedColor",
+      "fontName":"Applied Font",
+      "borderWidth":"0"},
+    "adaptiveStyles":{
+},
+    "interactionMap":{
+},
+    "diagram":{
+      "objects":[{
+          "id":"ac95e2cc7d524aa9817b0ff795b25a79",
+          "label":"",
+          "type":"buttonShape",
+          "styleType":"paragraph",
+          "visible":true,
+          "style":{
+            "fontName":"'Applied Font Regular', 'Applied Font'",
+            "location":{
+              "x":20,
+              "y":26},
+            "size":{
+              "width":360,
+              "height":80}},
+          "adaptiveStyles":{
+},
+          "objects":[{
+              "id":"75c07f01cc844b90989a29ca516115b5",
+              "label":"",
+              "isContained":true,
+              "type":"richTextPanel",
+              "styleType":"paragraph",
+              "visible":true,
+              "style":{
+                "fontName":"'Applied Font Regular', 'Applied Font'",
+                "location":{
+                  "x":20,
+                  "y":26},
+                "size":{
+                  "width":360,
+                  "height":80}},
+              "adaptiveStyles":{
+}}],
+          "images":{
+            "normal~":"resources/images/transparent.gif"}}]}},
+  "masters":{
+},
+  "objectPaths":{
+    "ac95e2cc7d524aa9817b0ff795b25a79":{
+      "scriptId":"u0"},
+    "75c07f01cc844b90989a29ca516115b5":{
+      "scriptId":"u1"}}});

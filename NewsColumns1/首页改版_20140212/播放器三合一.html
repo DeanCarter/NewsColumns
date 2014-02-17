@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <title>播放器三合一</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <link href="resources/css/jquery-ui-themes.css" type="text/css" rel="stylesheet"/>
+    <link href="resources/css/axure_rp_page.css" type="text/css" rel="stylesheet"/>
+    <link href="data/styles.css" type="text/css" rel="stylesheet"/>
+    <link href="files/播放器三合一/styles.css" type="text/css" rel="stylesheet"/>
+    <script src="resources/scripts/jquery-1.7.1.min.js"></script>
+    <script src="resources/scripts/jquery-ui-1.8.10.custom.min.js"></script>
+    <script src="resources/scripts/axure/axQuery.js"></script>
+    <script src="resources/scripts/axure/globals.js"></script>
+    <script src="resources/scripts/axutils.js"></script>
+    <script src="resources/scripts/axure/annotation.js"></script>
+    <script src="resources/scripts/axure/axQuery.std.js"></script>
+    <script src="resources/scripts/axure/doc.js"></script>
+    <script src="data/document.js"></script>
+    <script src="resources/scripts/messagecenter.js"></script>
+    <script src="resources/scripts/axure/events.js"></script>
+    <script src="resources/scripts/axure/action.js"></script>
+    <script src="resources/scripts/axure/expr.js"></script>
+    <script src="resources/scripts/axure/geometry.js"></script>
+    <script src="resources/scripts/axure/flyout.js"></script>
+    <script src="resources/scripts/axure/ie.js"></script>
+    <script src="resources/scripts/axure/model.js"></script>
+    <script src="resources/scripts/axure/repeater.js"></script>
+    <script src="resources/scripts/axure/sto.js"></script>
+    <script src="resources/scripts/axure/utils.temp.js"></script>
+    <script src="resources/scripts/axure/variables.js"></script>
+    <script src="resources/scripts/axure/drag.js"></script>
+    <script src="resources/scripts/axure/move.js"></script>
+    <script src="resources/scripts/axure/visibility.js"></script>
+    <script src="resources/scripts/axure/style.js"></script>
+    <script src="resources/scripts/axure/adaptive.js"></script>
+    <script src="resources/scripts/axure/tree.js"></script>
+    <script src="resources/scripts/axure/init.temp.js"></script>
+    <script src="files/播放器三合一/data.js"></script>
+    <script src="resources/scripts/axure/legacy.js"></script>
+    <script src="resources/scripts/axure/viewer.js"></script>
+    <script type="text/javascript">
+      $axure.utils.getTransparentGifPath = function() { return 'resources/images/transparent.gif'; };
+      $axure.utils.getOtherPath = function() { return 'resources/Other.html'; };
+      $axure.utils.getReloadPath = function() { return 'resources/reload.html'; };
+    </script>
+  </head>
+  <body>
+    <div id="base" class="">
+
+      <!-- Unnamed (形状) -->
+      <div id="u0" class="ax_文本">
+        <img id="u0_img" class="img " src="resources/images/transparent.gif"/>
+        <!-- Unnamed () -->
+        <div id="u1" class="text">
+          <p style="font-family:'Arial Normal', 'Arial';font-weight:400;font-style:normal;"><span style="font-family:'Applied Font Regular', 'Applied Font';">说明：点播、音乐、直播播放器三者合一，简单操作，降低用户使用成本</span></p><p style="font-family:'Arial Normal', 'Arial';font-weight:400;font-style:normal;"><span style="font-family:'Applied Font Regular', 'Applied Font';">&#149; 页首：最左边后退上页 中间当前播放节目标题 </span></p><p style="font-family:'Arial Normal', 'Arial';font-weight:400;font-style:normal;"><span style="font-family:'Applied Font Regular', 'Applied Font';">&#149; 封面：高清大图，后台节目录入需录入相关封面图片，如部分节目实在没有封面，可显示系统图片</span></p><p style="font-family:'Arial Normal', 'Arial';font-weight:400;font-style:normal;"><span style="font-family:'Applied Font Regular', 'Applied Font';">&#149; 定时：重新设计定时逻辑及icon，设定时间后会在界面上有时间倒计时显示</span></p><p style="font-family:'Arial Normal', 'Arial';font-weight:400;font-style:normal;"><span style="font-family:'Applied Font Regular', 'Applied Font';">&#149; 进度条：视觉重新设计，最左侧已播放时间，最右侧节目时长，黑色进度表整个节目，红色表示正在播放的进度，进度条可拖动</span></p><p style="font-family:'Arial Normal', 'Arial';font-weight:400;font-style:normal;"><span style="font-family:'Applied Font Regular', 'Applied Font';">&#149; 控制：中间播放/暂停，左边上一条，右边下一条</span></p><p style="font-family:'Arial Normal', 'Arial';font-weight:400;font-style:normal;"><span style="font-family:'Applied Font Regular', 'Applied Font';">&#149; 上一条、下一条按钮</span><span style="font-family:'Applied Font Regular', 'Applied Font';">在播放直播内容时候为灰色</span></p><p style="font-family:'Arial Normal', 'Arial';font-weight:400;font-style:normal;"><span style="font-family:'Applied Font Regular', 'Applied Font';">&#149; 音量：下线，通过设备进行音量控制</span></p><p style="font-family:'Arial Normal', 'Arial';font-weight:400;font-style:normal;"><span style="font-family:'Applied Font Regular', 'Applied Font';">&#149; </span><span style="font-family:'Applied Font Regular', 'Applied Font';">前进</span><span style="font-family:'Applied Font Regular', 'Applied Font';">/</span><span style="font-family:'Applied Font Regular', 'Applied Font';">后退</span><span style="font-family:'Applied Font Regular', 'Applied Font';">15</span><span style="font-family:'Applied Font Regular', 'Applied Font';">秒：</span><span style="font-family:'Applied Font Regular', 'Applied Font';">原后退30秒下线，增加前进后退15秒</span></p><p style="font-family:'Arial Normal', 'Arial';font-weight:400;font-style:normal;"><span style="font-family:'Applied Font Regular', 'Applied Font';">&#149; 订阅：增加一行显示栏目logo、名称、订阅人数，订阅/未定阅按钮，点中间进入该栏目的内容列表，点左侧icon进行订阅/取消订阅操作</span></p><p style="font-family:'Arial Normal', 'Arial';font-weight:400;font-style:normal;"><span style="font-family:'Applied Font Regular', 'Applied Font';">&#149; 播放列表：逻辑同之前版本，显示当前栏目中的内容列表，每条内容显示标题、时长，不显示其他信息</span></p><p style="font-family:'Arial Normal', 'Arial';font-weight:400;font-style:normal;"><span style="font-family:'Applied Font Regular', 'Applied Font';">&#149; </span><span style="font-family:'Applied Font Regular', 'Applied Font';">播放列表与相关栏目单点切换</span></p><p style="font-family:'Arial Normal', 'Arial';font-weight:400;font-style:normal;"><span style="font-family:'Applied Font Regular', 'Applied Font';">&#149; 页面可无限向下滑动</span></p><p style="font-family:'Arial Normal', 'Arial';font-weight:400;font-style:normal;"><span style="font-family:'Applied Font Regular', 'Applied Font';">&#149; 相关栏目：同一个分类下的所有栏目列表</span><span style="font-family:'Applied Font Regular', 'Applied Font';">，操作：左边加号icon订阅/取消订阅，其他区域单点进入该栏目列表</span><span style="font-family:'Applied Font Regular', 'Applied Font';">,列表向下无限加载</span></p><p style="font-family:'Arial Normal', 'Arial';font-weight:400;font-style:normal;"><span style="font-family:'Applied Font Regular', 'Applied Font';">&#149; 页底浮层一直显示互动icon，从左到右依次是分享、下载、评论(右上角红色显示评论数)、收藏</span><span style="font-family:'Applied Font Regular', 'Applied Font';">、视频</span></p><p style="font-family:'Arial Normal', 'Arial';font-weight:400;font-style:normal;"><span style="font-family:'Applied Font Regular', 'Applied Font';">&nbsp;</span></p><p style="font-family:'Arial Normal', 'Arial';font-weight:400;font-style:normal;"><span style="font-family:'Applied Font Regular', 'Applied Font';">&nbsp;</span></p>
+        </div>
+      </div>
+
+      <!-- Unnamed (Image) -->
+      <div id="u2" class="ax_image">
+        <img id="u2_img" class="img " src="images/播放器三合一/u2.jpg"/>
+        <!-- Unnamed () -->
+        <div id="u3" class="text"></div>
+      </div>
+
+      <!-- Unnamed (Image) -->
+      <div id="u4" class="ax_image">
+        <img id="u4_img" class="img " src="images/播放器三合一/u4.jpg"/>
+        <!-- Unnamed () -->
+        <div id="u5" class="text"></div>
+      </div>
+    </div>
+  </body>
+</html>

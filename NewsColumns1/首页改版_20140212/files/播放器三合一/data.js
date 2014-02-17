@@ -1,0 +1,151 @@
+﻿$axure.loadCurrentPage({
+  "url":"播放器三合一.html",
+  "generationDate":new Date(1392372079354.46),
+  "isCanvasEnabled":false,
+  "variables":["OnLoadVariable"],
+  "page":{
+    "packageId":"d33eafb086ea4e95aace06bc3bba87c1",
+    "type":"Axure:Page",
+    "name":"播放器三合一",
+    "notes":{
+},
+    "style":{
+      "baseStyle":"627587b6038d43cca051c114ac41ad32",
+      "pageAlignment":"near",
+      "fill":{
+        "fillType":"solid",
+        "color":0xFFFFFFFF},
+      "image":null,
+      "imageHorizontalAlignment":"near",
+      "imageVerticalAlignment":"near",
+      "imageRepeat":"auto",
+      "favicon":null,
+      "sketchFactor":"0",
+      "colorStyle":"appliedColor",
+      "fontName":"Applied Font",
+      "borderWidth":"0"},
+    "adaptiveStyles":{
+},
+    "interactionMap":{
+},
+    "diagram":{
+      "objects":[{
+          "id":"f2449019a30c4b9b982c6fa431ce8b69",
+          "label":"",
+          "type":"buttonShape",
+          "styleType":"paragraph",
+          "visible":true,
+          "style":{
+            "fontName":"'Applied Font Regular', 'Applied Font'",
+            "location":{
+              "x":1390,
+              "y":27},
+            "size":{
+              "width":300,
+              "height":480}},
+          "adaptiveStyles":{
+},
+          "objects":[{
+              "id":"356da9aabc8a49efaad89e6db5c1c8e4",
+              "label":"",
+              "isContained":true,
+              "type":"richTextPanel",
+              "styleType":"paragraph",
+              "visible":true,
+              "style":{
+                "fontName":"'Applied Font Regular', 'Applied Font'",
+                "location":{
+                  "x":1390,
+                  "y":27},
+                "size":{
+                  "width":300,
+                  "height":480}},
+              "adaptiveStyles":{
+}}],
+          "images":{
+            "normal~":"resources/images/transparent.gif"}},
+{
+          "id":"78d1ece5baa44dc7a3518813c3599cb0",
+          "label":"",
+          "type":"imageBox",
+          "styleType":"imageBox",
+          "visible":true,
+          "style":{
+            "fontName":"'Applied Font Regular', 'Applied Font'",
+            "location":{
+              "x":40,
+              "y":27},
+            "size":{
+              "width":640,
+              "height":1136}},
+          "adaptiveStyles":{
+},
+          "objects":[{
+              "id":"0ac3a50c54a54277ad9f43c238a21cf4",
+              "label":"",
+              "isContained":true,
+              "type":"richTextPanel",
+              "styleType":"paragraph",
+              "visible":true,
+              "style":{
+                "fontName":"'Applied Font Regular', 'Applied Font'",
+                "location":{
+                  "x":40,
+                  "y":27},
+                "size":{
+                  "width":640,
+                  "height":1136}},
+              "adaptiveStyles":{
+}}],
+          "images":{
+            "normal~":"images/播放器三合一/u2.jpg"}},
+{
+          "id":"ff550b4c46034a40ae446cd267a38a5f",
+          "label":"",
+          "type":"imageBox",
+          "styleType":"imageBox",
+          "visible":true,
+          "style":{
+            "fontName":"'Applied Font Regular', 'Applied Font'",
+            "location":{
+              "x":720,
+              "y":27},
+            "size":{
+              "width":640,
+              "height":1136}},
+          "adaptiveStyles":{
+},
+          "objects":[{
+              "id":"2a1886a5ceb04c9eb67369f9e4986bcd",
+              "label":"",
+              "isContained":true,
+              "type":"richTextPanel",
+              "styleType":"paragraph",
+              "visible":true,
+              "style":{
+                "fontName":"'Applied Font Regular', 'Applied Font'",
+                "location":{
+                  "x":720,
+                  "y":27},
+                "size":{
+                  "width":640,
+                  "height":1136}},
+              "adaptiveStyles":{
+}}],
+          "images":{
+            "normal~":"images/播放器三合一/u4.jpg"}}]}},
+  "masters":{
+},
+  "objectPaths":{
+    "f2449019a30c4b9b982c6fa431ce8b69":{
+      "scriptId":"u0"},
+    "356da9aabc8a49efaad89e6db5c1c8e4":{
+      "scriptId":"u1"},
+    "78d1ece5baa44dc7a3518813c3599cb0":{
+      "scriptId":"u2"},
+    "0ac3a50c54a54277ad9f43c238a21cf4":{
+      "scriptId":"u3"},
+    "ff550b4c46034a40ae446cd267a38a5f":{
+      "scriptId":"u4"},
+    "2a1886a5ceb04c9eb67369f9e4986bcd":{
+      "scriptId":"u5"}}});

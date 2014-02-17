@@ -1,0 +1,112 @@
+﻿$axure.loadCurrentPage({
+  "url":"音乐二级分类.html",
+  "generationDate":new Date(1392372077840.46),
+  "isCanvasEnabled":false,
+  "variables":["OnLoadVariable"],
+  "page":{
+    "packageId":"98d2546411014bf28212117a6f1e0faf",
+    "type":"Axure:Page",
+    "name":"音乐二级分类",
+    "notes":{
+},
+    "style":{
+      "baseStyle":"627587b6038d43cca051c114ac41ad32",
+      "pageAlignment":"near",
+      "fill":{
+        "fillType":"solid",
+        "color":0xFFFFFFFF},
+      "image":null,
+      "imageHorizontalAlignment":"near",
+      "imageVerticalAlignment":"near",
+      "imageRepeat":"auto",
+      "favicon":null,
+      "sketchFactor":"0",
+      "colorStyle":"appliedColor",
+      "fontName":"Applied Font",
+      "borderWidth":"0"},
+    "adaptiveStyles":{
+},
+    "interactionMap":{
+},
+    "diagram":{
+      "objects":[{
+          "id":"89edae63bf224b449d826ad1895550b9",
+          "label":"",
+          "type":"buttonShape",
+          "styleType":"paragraph",
+          "visible":true,
+          "style":{
+            "fontName":"'Applied Font Regular', 'Applied Font'",
+            "location":{
+              "x":650,
+              "y":138},
+            "size":{
+              "width":300,
+              "height":128}},
+          "adaptiveStyles":{
+},
+          "objects":[{
+              "id":"a26a4b422cd94ab7a5fea90ddf473e12",
+              "label":"",
+              "isContained":true,
+              "type":"richTextPanel",
+              "styleType":"paragraph",
+              "visible":true,
+              "style":{
+                "fontName":"'Applied Font Regular', 'Applied Font'",
+                "location":{
+                  "x":650,
+                  "y":138},
+                "size":{
+                  "width":300,
+                  "height":128}},
+              "adaptiveStyles":{
+}}],
+          "images":{
+            "normal~":"resources/images/transparent.gif"}},
+{
+          "id":"7c83c4e89665406c9ff969c8cd14f92a",
+          "label":"",
+          "type":"imageBox",
+          "styleType":"imageBox",
+          "visible":true,
+          "style":{
+            "fontName":"'Applied Font Regular', 'Applied Font'",
+            "location":{
+              "x":0,
+              "y":14},
+            "size":{
+              "width":640,
+              "height":1136}},
+          "adaptiveStyles":{
+},
+          "objects":[{
+              "id":"3e8d5eb3c80440c1a7ccbc2bfa07d596",
+              "label":"",
+              "isContained":true,
+              "type":"richTextPanel",
+              "styleType":"paragraph",
+              "visible":true,
+              "style":{
+                "fontName":"'Applied Font Regular', 'Applied Font'",
+                "location":{
+                  "x":0,
+                  "y":14},
+                "size":{
+                  "width":640,
+                  "height":1136}},
+              "adaptiveStyles":{
+}}],
+          "images":{
+            "normal~":"images/音乐二级分类/u2.jpg"}}]}},
+  "masters":{
+},
+  "objectPaths":{
+    "89edae63bf224b449d826ad1895550b9":{
+      "scriptId":"u0"},
+    "a26a4b422cd94ab7a5fea90ddf473e12":{
+      "scriptId":"u1"},
+    "7c83c4e89665406c9ff969c8cd14f92a":{
+      "scriptId":"u2"},
+    "3e8d5eb3c80440c1a7ccbc2bfa07d596":{
+      "scriptId":"u3"}}});
