@@ -550,44 +550,91 @@ static const CGFloat kDefaultAnimationDuration = 0.3;
                             options:0
                          animations:^{
                              cell.frame = CGRectMake(newPoint.x, newPoint.y, self.itemSize.width, self.itemSize.height);
+                             cell.tag = kEditeItemSelectedDefaultTag + (self.seletedArray.count - 1);
                          } completion:^(BOOL finished) {
                              [cell release];
                          }];
-
+        
         
         NSMutableArray *itemsArray = [NSMutableArray array];
         NSMutableArray *pointsArray = [NSMutableArray array];
         for (int i = (index + 1); i <= self.moreArray.count; i++) {
             ItemView *itemV = [self lookForAppointItemView:i withIsSelectedView:NO];
+            itemV.tag = kEditeItemCandidateDefaultTag + (i - 1);
             CGPoint changePoint = [self originForItemAtPosition:(i - 1)];
             
             
-            [CATransaction begin];
-            [CATransaction setCompletionBlock:^{
-               itemV.frame = CGRectMake(changePoint.x, changePoint.y, self.itemSize.width, self.itemSize.height);
-            }];
-            [CATransaction commit];
+            //            [CATransaction begin];
+            //            [CATransaction setAnimationDuration:kDefaultAnimationDuration];
+            //            [CATransaction setCompletionBlock:^{
+            //               itemV.frame = CGRectMake(changePoint.x, changePoint.y, self.itemSize.width, self.itemSize.height);
+            //            }];
+            //            [CATransaction commit];
             
             [itemsArray addObject:itemV];
             [pointsArray addObject:[NSValue valueWithCGPoint:changePoint]];
         }
         
         
+        
+        [UIView animateWithDuration:kDefaultAnimationDuration
+                              delay:0
+                            options:0
+                         animations:^{
+                             for (int i = 0; i < itemsArray.count; i++) {
+                                 ItemView *itemV = [itemsArray objectAtIndex:i];
+                                 CGPoint newPoint = [[pointsArray objectAtIndex:i] CGPointValue];
+                                 itemView.frame = CGRectMake(newPoint.x, newPoint.y, self.itemSize.width, self.itemSize.height);
+                             }
+                             
+                         } completion:^(BOOL finished) {
+                             
+                         }];
+    }else {
         return;
-            [UIView animateWithDuration:kDefaultAnimationDuration
-                                  delay:0
-                                options:0
-                             animations:^{
-                                 for (int i = 0; i < itemsArray.count; i++) {
-                                     ItemView *itemView = [itemsArray objectAtIndex:i];
-                                     CGPoint newPoint = [[pointsArray objectAtIndex:i] CGPointValue];
-                                     itemView.frame = CGRectMake(newPoint.x, newPoint.y, self.itemSize.width, self.itemSize.height);
-                                 }
-                                 
-                             } completion:^(BOOL finished) {
-                                 
-                             }];
+        [self bringSubviewToFront:itemView];
+        
+        CGRect moreFirstFrame = CGRectMake([self originForItemAtPosition:0].x, [self originForItemAtPosition:0].y, self.itemSize.width, self.itemSize.height);
+        
+        CGRect relativeFrame = [self.moreScrollView convertRect:moreFirstFrame toView:self];
+        
+        
+        NSMutableArray *itemsArray = [NSMutableArray array];
+        for (int i = 1; i < self.moreArray.count; i++) {
+            ItemView *itemV = [self lookForAppointItemView:i-1 withIsSelectedView:NO];
+            [itemsArray addObject:itemV];
         }
+        
+        [UIView animateWithDuration:kDefaultAnimationDuration
+                              delay:0
+                            options:0
+                         animations:^{
+                             itemView.tag = kEditeItemCandidateDefaultTag;
+                             itemView.frame = relativeFrame;
+                             for (int i = 0; i < itemsArray.count; i++) {
+                                 ItemView *itemV = [itemsArray objectAtIndex:i];
+                                 itemV.tag += 1;
+                                 CGPoint newPoint = [self originForItemAtPosition:(i+1)];
+                                 itemView.frame = CGRectMake(newPoint.x, newPoint.y, self.itemSize.width, self.itemSize.height);
+                             }
+                             
+                         } completion:^(BOOL finished) {
+                             ItemView *cell = [itemView retain];
+                             [itemView removeFromSuperview];
+                             
+                             cell.frame = moreFirstFrame;
+                             [self.moreScrollView addSubview:cell];
+                             [cell release];
+                             //[self bringSubviewToFront:cell];
+                         }];
+        
+        
+        for (UIView *v in self.moreScrollView.subviews) {
+            if ([v isKindOfClass:[ItemView class]]) {
+                v.tag += 1;
+            }
+        }
+    }
 }
 
 - (void)removeObjectAtIndex:(NSInteger)index withAnimation:(BOOL)animation withIsSelected:(BOOL)flag
