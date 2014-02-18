@@ -536,7 +536,7 @@ static const CGFloat kDefaultAnimationDuration = 0.3;
     if (flag) {
         
         CGRect newFrame = [self.moreScrollView convertRect:itemView.frame toView:self];
-        
+        DLog(@"preious:  %@   new:   %@",NSStringFromCGRect(itemView.frame),NSStringFromCGRect(newFrame));
         __block ItemView *cell = [itemView retain];
         [itemView removeFromSuperview];
         
@@ -604,6 +604,26 @@ static const CGFloat kDefaultAnimationDuration = 0.3;
             [itemsArray addObject:itemV];
         }
         
+        
+        NSMutableArray *itemsSelectedArray = [NSMutableArray array];
+        NSMutableArray *pointsSelectedArray = [NSMutableArray array];
+        for (int i = (index + 1); i <= self.seletedArray.count; i++) {
+            ItemView *itemV = [self lookForAppointItemView:i withIsSelectedView:YES];
+            itemV.tag = kEditeItemSelectedDefaultTag + (i - 1);
+            CGPoint changePoint = [self originForItemAtPosition:(i - 1)];
+            
+            
+            //            [CATransaction begin];
+            //            [CATransaction setAnimationDuration:kDefaultAnimationDuration];
+            //            [CATransaction setCompletionBlock:^{
+            //               itemV.frame = CGRectMake(changePoint.x, changePoint.y, self.itemSize.width, self.itemSize.height);
+            //            }];
+            //            [CATransaction commit];
+            
+            [itemsSelectedArray addObject:itemV];
+            [pointsSelectedArray addObject:[NSValue valueWithCGPoint:changePoint]];
+        }
+        
         [UIView animateWithDuration:kDefaultAnimationDuration
                               delay:0
                             options:0
@@ -616,6 +636,12 @@ static const CGFloat kDefaultAnimationDuration = 0.3;
                                  CGPoint newPoint = [self originForItemAtPosition:(i+1)];
                                  itemV.frame = CGRectMake(newPoint.x, newPoint.y, self.itemSize.width, self.itemSize.height);
                              }
+                             for (int j = 0; j < itemsSelectedArray.count; j++) {
+                                 ItemView *itemVw = [itemsSelectedArray objectAtIndex:j];
+                                 CGPoint newPoint = [[pointsSelectedArray objectAtIndex:j] CGPointValue];
+                                 itemVw.frame = CGRectMake(newPoint.x, newPoint.y, self.itemSize.width, self.itemSize.height);
+                             }
+                             
                              
                          } completion:^(BOOL finished) {
                              ItemView *cell = [itemView retain];
@@ -628,11 +654,11 @@ static const CGFloat kDefaultAnimationDuration = 0.3;
                          }];
         
         
-        for (UIView *v in self.moreScrollView.subviews) {
-            if ([v isKindOfClass:[ItemView class]]) {
-                v.tag += 1;
-            }
-        }
+//        for (UIView *v in self.moreScrollView.subviews) {
+//            if ([v isKindOfClass:[ItemView class]]) {
+//                v.tag += 1;
+//            }
+//        }
     }
 }
 
