@@ -25,6 +25,8 @@ static const CGFloat kDefaultAnimationDuration = 0.3;
     NSInteger _sortFuturePosition;
     
     BOOL  _isFirstLoad;
+    
+    BOOL _canEdited;
 }
 
 @property (nonatomic, retain) NSMutableArray *seletedArray;
@@ -114,6 +116,8 @@ static const CGFloat kDefaultAnimationDuration = 0.3;
     _sortFuturePosition = kFM_INVALID_POSITION;
     
     _isFirstLoad = YES;
+    
+    _canEdited = YES;
 }
 
 - (NSInteger)numOfPerRow
@@ -305,7 +309,7 @@ static const CGFloat kDefaultAnimationDuration = 0.3;
         valid = NO;
     }
     
-    return valid;
+    return (valid && _canEdited);
 }
 
 
@@ -321,7 +325,7 @@ static const CGFloat kDefaultAnimationDuration = 0.3;
     NSInteger position = [self positionForCurrentLocation:locationTouch isSelectedView:isSelected];
     ItemView *itemView = [self lookForAppointItemView:position withIsSelectedView:isSelected];
     
-    if (position != kFM_INVALID_POSITION) {
+    if (position != kFM_INVALID_POSITION && !((position == 0 || position == 1) && isSelected)) {
         [self selectedItemView:itemView
                        AtIndex:position
             withIsSelectedView:isSelected];
@@ -533,6 +537,7 @@ static const CGFloat kDefaultAnimationDuration = 0.3;
 
 - (void)insertObjectAtIndex:(NSInteger)index withAnimation:(BOOL)animation withIsSelected:(BOOL)flag withItemView:(ItemView *)itemView
 {
+    _canEdited = NO;
     if (flag) {
         
         CGRect newFrame = [self.moreScrollView convertRect:itemView.frame toView:self];
@@ -588,7 +593,7 @@ static const CGFloat kDefaultAnimationDuration = 0.3;
                              }
                              
                          } completion:^(BOOL finished) {
-                             
+                             _canEdited = YES;
                          }];
     }else {
         [self bringSubviewToFront:itemView];
@@ -650,6 +655,8 @@ static const CGFloat kDefaultAnimationDuration = 0.3;
                              cell.frame = moreFirstFrame;
                              [self.moreScrollView addSubview:cell];
                              [cell release];
+                             
+                             _canEdited = YES;
                              //[self bringSubviewToFront:cell];
                          }];
         
