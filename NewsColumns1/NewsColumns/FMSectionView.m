@@ -515,7 +515,7 @@ static const CGFloat kDefaultAnimationDuration = 0.3;
                 v.tag = _sortFuturePosition + kEditeItemSelectedDefaultTag;
                 CGPoint origin = [self originForItemAtPosition:_sortFuturePosition];
                 
-                [UIView animateWithDuration:kDefaultAnimationDuration
+                [UIView animateWithDuration:(kDefaultAnimationDuration - .1)
                                       delay:0
                                     options:0
                                  animations:^{
@@ -584,14 +584,13 @@ static const CGFloat kDefaultAnimationDuration = 0.3;
                              for (int i = 0; i < itemsArray.count; i++) {
                                  ItemView *itemV = [itemsArray objectAtIndex:i];
                                  CGPoint newPoint = [[pointsArray objectAtIndex:i] CGPointValue];
-                                 itemView.frame = CGRectMake(newPoint.x, newPoint.y, self.itemSize.width, self.itemSize.height);
+                                 itemV.frame = CGRectMake(newPoint.x, newPoint.y, self.itemSize.width, self.itemSize.height);
                              }
                              
                          } completion:^(BOOL finished) {
                              
                          }];
     }else {
-        return;
         [self bringSubviewToFront:itemView];
         
         CGRect moreFirstFrame = CGRectMake([self originForItemAtPosition:0].x, [self originForItemAtPosition:0].y, self.itemSize.width, self.itemSize.height);
@@ -615,7 +614,7 @@ static const CGFloat kDefaultAnimationDuration = 0.3;
                                  ItemView *itemV = [itemsArray objectAtIndex:i];
                                  itemV.tag += 1;
                                  CGPoint newPoint = [self originForItemAtPosition:(i+1)];
-                                 itemView.frame = CGRectMake(newPoint.x, newPoint.y, self.itemSize.width, self.itemSize.height);
+                                 itemV.frame = CGRectMake(newPoint.x, newPoint.y, self.itemSize.width, self.itemSize.height);
                              }
                              
                          } completion:^(BOOL finished) {
