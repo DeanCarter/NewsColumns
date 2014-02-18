@@ -29,6 +29,7 @@
     // Do any additional setup after loading the view from its nib.
     
     FMSectionView *sectionView = [[FMSectionView alloc] initWithFrame:self.view.frame];
+    sectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     sectionView.backgroundColor = [UIColor clearColor];
     sectionView.itemSize = CGSizeMake(70, 40);
     sectionView.borderWidthX = 5.f;

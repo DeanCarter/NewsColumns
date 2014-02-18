@@ -60,9 +60,9 @@ static const CGFloat kDefaultAnimationDuration = 0.3;
         // Initialization code
         [self commitInit];
         
-        self.seletedArray = [NSMutableArray arrayWithObjects:@"头条",@"娱乐",@"财经",@"科技",@"手机",@"北京",@"军事",@"游戏",@"汽车",@"轻松一刻",@"房产",@"时尚",@"历史",nil];
-        self.moreArray = [NSMutableArray arrayWithObjects:@"电影",@"体育",@"彩票",@"微博",@"社会",@"历史",@"移动互联",@"教育",@"CBA",@"原创",@"养生",nil];
-        //self.moreArray = [NSMutableArray arrayWithObjects:@"电影",@"体育",@"彩票",@"微博",@"社会",@"历史",@"论坛",@"家居",@"真话",@"旅游",@"移动互联",@"教育",@"CBA",@"原创",@"养生",nil];
+        self.seletedArray = [NSMutableArray arrayWithObjects:@"头条",@"娱乐",@"财经",@"科技",@"手机",@"北京",@"军事",@"游戏",@"汽车",@"轻松一刻",@"房产",@"时尚",@"本地",nil];
+        //self.moreArray = [NSMutableArray arrayWithObjects:@"电影",@"体育",@"彩票",@"微博",@"社会",@"历史",@"移动互联",@"教育",@"CBA",@"原创",@"养生",nil];
+        self.moreArray = [NSMutableArray arrayWithObjects:@"电影",@"体育",@"彩票",@"微博",@"社会",@"历史",@"论坛",@"家居",@"真话",@"旅游",@"移动互联",@"教育",@"CBA",@"原创",@"养生",nil];
     }
     return self;
 }
@@ -142,7 +142,7 @@ static const CGFloat kDefaultAnimationDuration = 0.3;
     CGFloat mainViewWidth = CGRectGetWidth(self.frame);
     
     //每个ItemView的间距
-    CGFloat itemSpacing = self.numOfPerRow > 0 ? (mainViewWidth - 2 * self.borderWidthX - self.numOfPerRow * self.itemSize.width) / ((CGFloat)(self.numOfPerRow - 1)) : 0.f;
+    CGFloat itemSpacing = self.numOfPerRow > 1 ? (mainViewWidth - 2 * self.borderWidthX - self.numOfPerRow * self.itemSize.width) / ((CGFloat)(self.numOfPerRow - 1)) : 0.f;
     
     return itemSpacing;
 }
@@ -175,10 +175,9 @@ static const CGFloat kDefaultAnimationDuration = 0.3;
         CGFloat contentHeight = self.borderHeightY * 2 + self.itemSize.height * moreRowNums + (moreRowNums - 1) * [self itemSpacing];
         
         self.moreScrollView.frame = CGRectMake(0, self.tipsView.bottom, self.frame.size.width, self.frame.size.height - self.tipsView.bottom);
-        
         self.moreScrollView.backgroundColor = [UIColor yellowColor];
         
-        self.moreScrollView.contentSize = CGSizeMake(self.moreScrollView.frame.size.width, contentHeight);
+        self.moreScrollView.contentSize = CGSizeMake(self.moreScrollView.frame.size.width, MAX(contentHeight, self.moreScrollView.frame.size.height));
         
         for (int j = 0; j < self.moreArray.count; j++) {
             if (![self lookForAppointItemView:j withIsSelectedView:NO] && _isFirstLoad) {
@@ -440,16 +439,6 @@ static const CGFloat kDefaultAnimationDuration = 0.3;
     self.movingItemView.tag = 0;
     
     [self startMovingItemView:self.movingItemView isSelectedView:YES];
-
-    NSInteger itemViewCounts = 0;
-    for (UIView *v in self.subviews) {
-        if ([v isKindOfClass:[ItemView class]]) {
-            itemViewCounts++;
-        }
-    }
-    DLog(@"之后             有多少个视图：  %d",itemViewCounts);
-    
-
 }
 
 - (void)sortingMoveDidStopAtPoint:(CGPoint)point
@@ -563,6 +552,10 @@ static const CGFloat kDefaultAnimationDuration = 0.3;
         
         NSMutableArray *itemsArray = [NSMutableArray array];
         NSMutableArray *pointsArray = [NSMutableArray array];
+        
+        for (int i = 0; i < self.moreArray.count; i++) {
+            
+        }
         for (int i = (index + 1); i <= self.moreArray.count; i++) {
             ItemView *itemV = [self lookForAppointItemView:i withIsSelectedView:NO];
             itemV.tag = kEditeItemCandidateDefaultTag + (i - 1);
@@ -580,7 +573,8 @@ static const CGFloat kDefaultAnimationDuration = 0.3;
             [pointsArray addObject:[NSValue valueWithCGPoint:changePoint]];
         }
         
-        
+        DLog(@"打印ItemsArray:  %@",itemsArray);
+
         
         [UIView animateWithDuration:kDefaultAnimationDuration
                               delay:0
@@ -605,11 +599,11 @@ static const CGFloat kDefaultAnimationDuration = 0.3;
         
         NSMutableArray *itemsArray = [NSMutableArray array];
         for (int i = 1; i < self.moreArray.count; i++) {
-            ItemView *itemV = [self lookForAppointItemView:i-1 withIsSelectedView:NO];
-            [itemsArray addObject:itemV];
+            ItemView *moreItemV = [self lookForAppointItemView:i-1 withIsSelectedView:NO];
+            [itemsArray addObject:moreItemV];
         }
         
-        
+        DLog(@"打印ItemsArray:  %@",itemsArray);
         NSMutableArray *itemsSelectedArray = [NSMutableArray array];
         NSMutableArray *pointsSelectedArray = [NSMutableArray array];
         for (int i = (index + 1); i <= self.seletedArray.count; i++) {
