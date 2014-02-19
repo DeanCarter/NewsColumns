@@ -29,14 +29,13 @@
                         <action selector="back:" destination="-1" eventType="touchUpInside" id="vkc-YL-A5o"/>
                     </connections>
                 </button>
-                <view contentMode="scaleToFill" id="Cew-dN-ODD" customClass="FMSectionEditView">
+                <view contentMode="scaleToFill" id="Cew-dN-ODD" customClass="FMLauncherView">
                     <rect key="frame" x="0.0" y="45" width="320" height="459"/>
                     <autoresizingMask key="autoresizingMask" heightSizable="YES" flexibleMaxY="YES"/>
                     <color key="backgroundColor" red="1" green="0.76469768187254639" blue="0.19263330121987277" alpha="1" colorSpace="calibratedRGB"/>
                     <connections>
-                        <outlet property="actionDelegate" destination="-1" id="ijz-pR-Rgi"/>
                         <outlet property="dataSource" destination="-1" id="DcQ-Bj-3Lc"/>
-                        <outlet property="sortDelegate" destination="-1" id="rEn-Aw-Xyg"/>
+                        <outlet property="delegate" destination="-1" id="ELS-ip-YLz"/>
                     </connections>
                 </view>
             </subviews>

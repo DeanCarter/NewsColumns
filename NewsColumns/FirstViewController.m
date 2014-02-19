@@ -10,12 +10,15 @@
 #import "FMSectionEditView.h"
 #import "FirstItemView.h"
 
-@interface FirstViewController ()<FMSectionEditViewActionDelegate,FMSectionEditViewDataSource,FMSectionEditViewSortDelegate>
+#import "FMLauncherView.h"
+
+
+@interface FirstViewController ()<FMLauncherViewDataSource,FMLauncherViewDelegate>
 @property (retain, nonatomic) IBOutlet UIButton *backBtn;
 @property (retain, nonatomic) NSMutableArray *selectedArray;
 @property (retain, nonatomic) NSMutableArray *candidateArray;
 
-@property (retain, nonatomic) IBOutlet FMSectionEditView *sectionEditView;
+@property (retain, nonatomic) IBOutlet FMLauncherView *sectionEditView;
 
 @end
 
@@ -39,10 +42,14 @@
     // Do any additional setup after loading the view from its nib.
     
     self.selectedArray = [NSMutableArray arrayWithObjects:@"头条",@"娱乐",@"财经",@"科技",@"手机",@"北京",@"军事",@"游戏",@"汽车",@"轻松一刻",@"房产",@"时尚",@"历史",nil];
-    self.candidateArray = [NSMutableArray arrayWithObjects:@"电影",@"体育",@"彩票",@"微博",@"社会",@"历史",@"论坛",@"家居",@"真话",@"旅游",@"移动互联",@"教育",@"CBA",@"原创",@"养生",nil];
     
-    self.sectionEditView.borderWidthX = 5.f;
-    self.sectionEditView.borderHeightY = 5.f;
+    self.candidateArray = [NSMutableArray arrayWithObjects:@"电影",@"体育",@"彩票",@"移动互联",@"教育",@"CBA",@"原创",@"养生",nil];
+
+    
+   // self.candidateArray = [NSMutableArray arrayWithObjects:@"电影",@"体育",@"彩票",@"微博",@"社会",@"本地",@"论坛",@"家居",@"真话",@"旅游",@"移动互联",@"教育",@"CBA",@"原创",@"养生",nil];
+    
+    self.sectionEditView.borderX = 5.f;
+    self.sectionEditView.borderY = 5.f;
     
 }
 
@@ -70,18 +77,18 @@
 
 
 #pragma mark -- dataSource && actionDelegate method
-- (CGSize)sizeForSectionEditItemView:(FMSectionEditView *)sectionEditView
+- (CGSize)sizeForLauncherItemView
 {
     return CGSizeMake(70, 40);
 }
 
-- (NSInteger)numberOfItemsInFMSectionEditView:(FMSectionEditView *)sectionEditView withIsSelectedView:(BOOL)flag
+- (NSInteger)numberOfItemsForLauncherWithIsSelected:(BOOL)flag
 {
     return flag ? self.selectedArray.count : self.candidateArray.count;
 }
 
 
-- (UIView *)tipsViewForFMSectionEditView:(FMSectionEditView *)sectionEditView
+- (UIView *)tipsViewForLauncherView:(FMLauncherView *)launcherView
 {
     UIView *view = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 40)] autorelease];
     view.backgroundColor = [UIColor grayColor];
@@ -97,45 +104,55 @@
     return view;
 }
 
-- (FMEditItemView *)fMSectionEditView:(FMSectionEditView *)sectionEditView itemViewForItemAtIndex:(NSInteger)index withIsSelectedView:(BOOL)flag
+
+- (FMItemView *)fMLauncherView:(FMLauncherView *)launcherView itemViewForItemAtIndex:(NSInteger)index isSelected:(BOOL)flag
 {
     FirstItemView *itemView = (FirstItemView *)[FirstItemView loadViewFromXib];
     itemView.tipsLabel.text = [NSString stringWithFormat:@"%@",flag ? _selectedArray[index] : _candidateArray[index]];
     return itemView;
 }
 
-- (void)fMSelectionEditView:(FMSectionEditView *)sectionEditView didTapOnItemAtIndex:(NSInteger)position withIsSelectedView:(BOOL)flag
+
+- (BOOL)fMLancherView:(FMLauncherView *)launcherView canEditItemForIsSelectedAtIndex:(NSInteger)index
 {
-    if(flag) {
-        NSObject *object = [_selectedArray objectAtIndex:position];
-        [_selectedArray removeObject:object];
-        [_candidateArray insertObject:object atIndex:0];
+    BOOL status = YES;
+    if (index == 0 || index == 1 || index == kFM_INVALID_POSITION) {
+        status = NO;
+    }
+    return status;
+}
+
+- (void)fMLauncherView:(FMLauncherView *)launcherView removeAtIndex:(NSInteger)index
+      insertAtPosition:(NSInteger)position
+   isSelectedForRemove:(BOOL)flag
+{
+    if (flag) {
+        NSObject *obj = [self.selectedArray objectAtIndex:index];
+        [self.candidateArray insertObject:obj atIndex:position];
+        [self.selectedArray removeObject:obj];
+        
     }else {
-        NSObject *object = [_candidateArray objectAtIndex:position];
-        [_candidateArray removeObject:object];
-        [_selectedArray addObject:object];
+        NSObject *obj = [self.candidateArray objectAtIndex:index];
+        [self.selectedArray insertObject:obj atIndex:position];
+        [self.candidateArray removeObject:obj];
 
     }
-    [self.sectionEditView reloadData];
-    DLog(@"%@  第%d个",(flag ? @"已选区": @"未选取"),position);
 }
 
-- (void)fmSelectionEditView:(FMSectionEditView *)sectionEditView
-            moveItemAtIndex:(NSInteger)oldIndex
-                    toIndex:(NSInteger)newIndex
+- (void)fMLauncherView:(FMLauncherView *)launcherView didSelectedItemAtIndex:(NSInteger)index isSelected:(BOOL)flag
 {
-    
-    NSObject *object = [_selectedArray objectAtIndex:oldIndex];
-    [_selectedArray removeObject:object];
-    [_selectedArray insertObject:object atIndex:newIndex];
+    if (flag) {
+        NSObject *obj = [self.selectedArray objectAtIndex:index];
+        [self.selectedArray removeObject:obj];
+        [self.candidateArray insertObject:obj atIndex:0];
+        
+    }else {
+        NSObject *obj = [self.candidateArray objectAtIndex:index];
+        [self.candidateArray removeObject:obj];
+        [self.selectedArray addObject:obj];
+        
+    }
 }
 
-- (void)fmSelectionEditView:(FMSectionEditView *)sectionEditView
-        exchangeItemAtIndex:(NSInteger)oldIndex
-            withItemAtIndex:(NSInteger)newIndex;
-{
-    
- //   [_orderList exchangeObjectAtIndex:index1 withObjectAtIndex:index2];
-}
 
 @end

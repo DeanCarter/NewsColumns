@@ -27,8 +27,7 @@
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <connections>
-                <outlet property="contentView" destination="d1v-h9-eH8" id="xlZ-y1-9Xb"/>
-                <outlet property="tipsLabel" destination="zzg-6n-Ecy" id="Xbl-ai-l8d"/>
+                <outlet property="tipsLabel" destination="zzg-6n-Ecy" id="2wY-dl-JeQ"/>
             </connections>
         </view>
     </objects>

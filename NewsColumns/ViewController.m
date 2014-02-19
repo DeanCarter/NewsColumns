@@ -62,7 +62,7 @@
     
     _orderGridView.mainSuperView = self.orderView;
     
-    DLog(@"GridView ContentSize:   %@",NSStringFromCGSize(_orderGridView.contentSize));
+   // DLog(@"GridView ContentSize:   %@",NSStringFromCGSize(_orderGridView.contentSize));
 
     
     _moreGridView = [[GMGridView alloc] initWithFrame:(CGRect){0,0,self.view.frame.size.width, CGRectGetHeight(self.alternativeView.frame)}];
@@ -186,7 +186,7 @@
 - (GMGridViewCell *)GMGridView:(GMGridView *)gridView cellForItemAtIndex:(NSInteger)index
 {
     if (gridView == _orderGridView) {
-        DLog(@"GridView ContentSize:   %@",NSStringFromCGSize(_orderGridView.contentSize));
+       // DLog(@"GridView ContentSize:   %@",NSStringFromCGSize(_orderGridView.contentSize));
     }
     CGSize size = [self GMGridView:gridView sizeForItemsInInterfaceOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
     

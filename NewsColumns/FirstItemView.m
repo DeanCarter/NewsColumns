@@ -24,6 +24,13 @@
     return self;
 }
 
+- (void)setFrame:(CGRect)frame
+{
+    [super setFrame:frame];
+   // DLog(@"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+
+}
+
 + (id)loadViewFromXib
 {
     return [[NSBundle mainBundle] loadNibNamed:@"FirstItemView" owner:nil options:nil][0];

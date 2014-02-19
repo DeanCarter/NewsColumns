@@ -7,8 +7,9 @@
 //
 
 #import "FMEditItemView.h"
+#import "FMItemView.h"
 
-@interface FirstItemView : FMEditItemView
+@interface FirstItemView : FMItemView
 @property (retain, nonatomic) IBOutlet UILabel *tipsLabel;
 
 + (id)loadViewFromXib;

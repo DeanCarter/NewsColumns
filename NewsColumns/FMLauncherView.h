@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+#define  kFM_INVALID_POSITION  -1
+
 @class FMLauncherView;
 @class FMItemView;
 
@@ -25,7 +27,16 @@
 
 @protocol FMLauncherViewDelegate <NSObject>
 @required
-- (void)fMLauncherView:(FMLauncherView *)launcherView didSelectedItemAtIndex:(NSInteger)index isSelected:(BOOL)flag;
+
+- (void)fMLauncherView:(FMLauncherView *)launcherView
+         removeAtIndex:(NSInteger)index
+      insertAtPosition:(NSInteger)position
+   isSelectedForRemove:(BOOL)flag;
+
+- (void)fMLauncherView:(FMLauncherView *)launcherView
+didSelectedItemAtIndex:(NSInteger)index
+            isSelected:(BOOL)flag;
+@optional
 - (void)insertItemAtIndex:(NSInteger)index isSelected:(BOOL)flag;
 
 @end

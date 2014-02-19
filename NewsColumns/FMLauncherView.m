@@ -15,7 +15,6 @@
 #define  kEditeItemCandidateDefaultTag  10000
 
 
-#define  kFM_INVALID_POSITION  -1
 
 static const CGFloat kDefaultAnimationDuration = 0.3;
 
@@ -39,6 +38,8 @@ typedef enum {
     BOOL _isFirstLoad;
     
     NSInteger _sortFuturePosition;
+    
+    NSInteger _selectedItemTag;
     
 }
 @property (nonatomic, retain) FMItemView *movingItemView;
@@ -96,9 +97,11 @@ typedef enum {
     
     _sortFuturePosition = kFM_INVALID_POSITION;
     
+    _selectedItemTag = kFM_INVALID_POSITION;
+    
     _isFirstLoad = YES;
     
-    _canEdited = NO;
+    _canEdited = YES;
     
     _canMoved = YES;
 }
@@ -176,13 +179,16 @@ typedef enum {
 
 - (void)layoutSubviews
 {
+
     [super layoutSubviews];
     
-    CGSize itemSize = [self.dataSource sizeForLauncherItemView];
-    [[self itemSubviewForType:FMItemSubViewForAll] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        FMItemView *itemview = (FMItemView *)obj;
-        itemview.size = itemSize;
-    }];
+//    CGSize itemSize = [self.dataSource sizeForLauncherItemView];
+//    [[self itemSubviewForType:FMItemSubViewForAll] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+//        FMItemView *itemview = (FMItemView *)obj;
+//        itemview.size = itemSize;
+//    }];
+    
+    [self show];
     
 }
 
@@ -196,10 +202,11 @@ typedef enum {
     CGSize itemSize = [self.dataSource sizeForLauncherItemView];
     
     NSInteger selectedRowNums = (selectedTotalNum + (self.numOfPerRow - 1))/self.numOfPerRow;
-    for (int i = 0; i < selectedRowNums; i++) {
+    for (int i = 0; i < selectedTotalNum; i++) {
         if (![self lookForAppointItemView:i withIsSelectedView:YES] && _isFirstLoad) {
             FMItemView *itemview = [self newItemViewSubViewForPosition:i withIsSelectedView:YES];
             [self addSubview:itemview];
+            
         }
     }
     
@@ -217,6 +224,7 @@ typedef enum {
     }
     
     _isFirstLoad = NO;
+    
 }
 
 #pragma mark -- 根据Index和是否是已选，生成新的ItemView
@@ -236,7 +244,7 @@ typedef enum {
     
     FMItemView *itemView = [[self.dataSource fMLauncherView:self itemViewForItemAtIndex:position isSelected:flag] retain];
     
-    CGFloat itemOriginY = flag ? (_borderY + (itemSize.height + self.itemSpacing) * currentRow) : self.tipsView.bottom;
+    CGFloat itemOriginY = flag ? (_borderY + (itemSize.height + self.itemSpacing) * currentRow) : (self.tipsView.bottom + (_borderY + (itemSize.height + self.itemSpacing) * currentRow));
     
     itemView.frame = CGRectMake((_borderX + (itemSize.width + self.itemSpacing) * currentCol),itemOriginY,itemSize.width,itemSize.height);
     itemView.tag = flag ? (kEditeItemSelectedDefaultTag + position) : (kEditeItemCandidateDefaultTag + position);
@@ -249,7 +257,7 @@ typedef enum {
 {
     FMItemView *itemView = nil;
     NSInteger viewTag = flag ? (kEditeItemSelectedDefaultTag + position) : (kEditeItemCandidateDefaultTag + position);
-    for (UIView *v in [self itemSubviewForType:flag ? FMItemSubViewFoIsSelected : FMItemSubViewForMore]) {
+    for (UIView *v in [self itemSubviewForType:(flag ? FMItemSubViewFoIsSelected : FMItemSubViewForMore)]) {
         if ([v isKindOfClass:[FMItemView class]] && v.tag == viewTag) {
             itemView = (FMItemView *)v;
             return itemView;
@@ -267,7 +275,7 @@ typedef enum {
     CGPoint locationTouch = location;
     NSInteger numOfPerRow = [self numOfPerRow];
     
-    CGPoint relativeLocation = CGPointMake(locationTouch.x - _borderX, locationTouch.y - _borderY - (flag ? self.tipsView.bottom : 0));
+    CGPoint relativeLocation = CGPointMake(locationTouch.x - _borderX, locationTouch.y - _borderY - (!flag ? self.tipsView.bottom : 0));
     //列
     int col = (int)(relativeLocation.x)/(itemSize.width + [self itemSpacing]);
     //行
@@ -283,7 +291,7 @@ typedef enum {
                                       itemOrigin.y,
                                       itemSize.width,
                                       itemSize.height);
-        if (!CGRectContainsPoint(itemFrame, relativeLocation))
+        if (!CGRectContainsPoint(itemFrame, locationTouch))
         {
             position = kFM_INVALID_POSITION;
         }
@@ -333,12 +341,44 @@ typedef enum {
     return flag;
 }
 
+
+#pragma mark -- 从选中第index项移除，插入到备选项的第position的位置
+- (void)removeItemView:(FMItemView *)itemView
+         removeAtIndex:(NSInteger)index
+      insertAtPosition:(NSInteger)position
+   isSelectedForRemove:(BOOL)flag
+{
+    [self.delegate fMLauncherView:self
+                    removeAtIndex:index
+                 insertAtPosition:position
+              isSelectedForRemove:flag
+     ];
+    
+    [self insertItemAtPosition:position
+             removeItemAtIndex:index
+                  withItemView:itemView
+         isSelectedFromRemoved:flag
+     ];
+    
+}
+
 #pragma mark -- 点击选中事件
 - (void)selectedItemView:(FMItemView *)itemView
                  AtIndex:(NSInteger)position
       withIsSelectedView:(BOOL)flag
 {
-    [self.delegate fMLauncherView:self didSelectedItemAtIndex:position isSelected:flag];
+    NSInteger selectedTotalNum = [self.dataSource numberOfItemsForLauncherWithIsSelected:YES];
+    
+    [self removeItemView:itemView
+           removeAtIndex:position
+        insertAtPosition:(flag ? 0 : selectedTotalNum)
+     isSelectedForRemove:flag
+     ];
+    
+    return;
+    [self.delegate fMLauncherView:self
+           didSelectedItemAtIndex:position
+                       isSelected:flag];
     
     [self insertObjectAtIndex:position
                  withItemView:itemView
@@ -347,19 +387,194 @@ typedef enum {
      ];
 }
 
+#pragma mark -- 移除&&插入事件
+- (void)insertItemAtPosition:(NSInteger)position
+           removeItemAtIndex:(NSInteger)index
+                withItemView:(FMItemView *)itemView
+       isSelectedFromRemoved:(BOOL)flag
+{
+    CGSize itemSize = [self.dataSource sizeForLauncherItemView];
+    
+    NSInteger selectedTotalNum = [self.dataSource numberOfItemsForLauncherWithIsSelected:YES];
+    NSInteger moreTotalNum = [self.dataSource numberOfItemsForLauncherWithIsSelected:NO];
+    NSInteger selectedRowNums = (selectedTotalNum + (self.numOfPerRow - 1))/self.numOfPerRow;
+    
+    _canEdited = NO;
+    [self bringSubviewToFront:itemView];
+    
+    //从备选项移除，插入到已选项中
+    if (!flag) {
+        CGPoint newPoint = [self originForItemAtPosition:position isSelectedView:YES selectedRowNumStatus:FMSelectedRowNumNomal];
+        
+        BOOL isNewRow = (((selectedTotalNum - 1)%([self numOfPerRow])) == 0);
+        
+        NSMutableArray *moreItemsArray = [NSMutableArray array];
+        NSMutableArray *newMorePointsArray = [NSMutableArray array];
+        
+        for (int i = 0; i <= moreTotalNum ; i++) {
+            FMItemView *cell = [self lookForAppointItemView:i withIsSelectedView:NO];
+            CGPoint newItemPoint = [self originForItemAtPosition:(i > index ? (i - 1) :i)
+                                                  isSelectedView:NO
+                                            selectedRowNumStatus:(isNewRow ? FMSelectedRowNumAdd : FMSelectedRowNumNomal)
+                                    ];
+            if (index == i) {
+                cell.tag = kFM_INVALID_POSITION;
+            }
+            cell.tag = (i > index ? (cell.tag - 1) : cell.tag);
+            if (cell.tag != itemView.tag) {
+                [moreItemsArray addObject:cell];
+                [newMorePointsArray addObject:[NSValue valueWithCGPoint:newItemPoint]];
+            }
+        }
+
+        
+        NSMutableArray *selectedItemsArray = [NSMutableArray array];
+        NSMutableArray *newSelectedPointsArray = [NSMutableArray array];
+        for (int j = position; j < (selectedTotalNum - 1); j++) {
+            FMItemView *selectedCell = [self lookForAppointItemView:j withIsSelectedView:YES];
+            //selectedCell.tag += 1;//写的有问题，每次加1，下次取的cell还是当前的cell
+            [selectedItemsArray addObject:selectedCell];
+            
+            CGPoint newItemPoint = [self originForItemAtPosition:(j + 1)
+                                                  isSelectedView:YES
+                                            selectedRowNumStatus:FMSelectedRowNumNomal];
+            [newSelectedPointsArray addObject:[NSValue valueWithCGPoint:newItemPoint]];
+        }
+
+        
+        [UIView animateWithDuration:kDefaultAnimationDuration
+                              delay:0
+                            options:0
+                         animations:^{
+                             itemView.frame = CGRectMake(newPoint.x, newPoint.y, itemSize.width, itemSize.height);
+                             itemView.tag = kEditeItemSelectedDefaultTag + position;
+                             
+                             for (int n = 0; n < moreItemsArray.count; n++) {
+                                 FMItemView *cell = [moreItemsArray objectAtIndex:n];
+                                 CGPoint newItemPoint = [[newMorePointsArray objectAtIndex:n] CGPointValue];
+                                 cell.frame = CGRectMake(newItemPoint.x, newItemPoint.y, itemSize.width, itemSize.height);
+                             }
+                             
+                             for (int m = 0; m < selectedItemsArray.count; m++) {
+                                 FMItemView *cell = [selectedItemsArray objectAtIndex:m];
+                                 CGPoint newItemPoint = [[newSelectedPointsArray objectAtIndex:m] CGPointValue];
+                                 cell.tag += 1;
+                                 cell.frame = CGRectMake(newItemPoint.x, newItemPoint.y, itemSize.width, itemSize.height);
+                             }
+                             
+                             CGFloat selectedViewHeight = _borderY * 2 + itemSize.height * selectedRowNums + (selectedRowNums - 1) * self.itemSpacing;
+                             self.tipsView.top = selectedViewHeight;
+                             
+                         } completion:^(BOOL finished) {
+                             _canEdited = YES;
+                         }];
+
+    }else {
+        //从已选项移除，插入到背选项中
+        BOOL isNewRow = ((selectedTotalNum %([self numOfPerRow])) == 0);
+        
+        CGPoint newPoint = [self originForItemAtPosition:position
+                                          isSelectedView:NO
+                                    selectedRowNumStatus:(isNewRow ? FMSelectedRowNumMinus : FMSelectedRowNumNomal)
+                            ];
+        
+        
+        
+        NSMutableArray *selectedItemsArray = [NSMutableArray array];
+        NSMutableArray *newSelectedPointsArray = [NSMutableArray array];
+
+        
+        for (int i = 0; i <= selectedTotalNum ; i++) {
+            FMItemView *cell = [self lookForAppointItemView:i withIsSelectedView:YES];
+            CGPoint newItemPoint = [self originForItemAtPosition:(i > index ? (i - 1) :i)
+                                                  isSelectedView:YES
+                                            selectedRowNumStatus:(isNewRow ? FMSelectedRowNumMinus : FMSelectedRowNumNomal)
+                                    ];
+            if (index == i) {
+                cell.tag = kFM_INVALID_POSITION;
+            }
+            cell.tag = (i > index ? (cell.tag - 1) : cell.tag);
+            if (cell.tag != itemView.tag) {
+                [selectedItemsArray addObject:cell];
+                [newSelectedPointsArray addObject:[NSValue valueWithCGPoint:newItemPoint]];
+            }
+        }
+        
+        NSMutableArray *moreItemsArray = [NSMutableArray array];
+        NSMutableArray *newMorePointsArray = [NSMutableArray array];
+
+        for (int j = 0; j < (moreTotalNum - 1); j++) {
+            FMItemView *moreCell = [self lookForAppointItemView:j withIsSelectedView:NO];
+           // moreCell.tag += 1; //写的有问题，每次加1，下次取的cell还是当前的cell
+            [moreItemsArray addObject:moreCell];
+            
+
+            
+            CGPoint newItemPoint = [self originForItemAtPosition:(j >= position ? (j + 1) : j)
+                                                  isSelectedView:NO
+                                            selectedRowNumStatus:(isNewRow ? FMSelectedRowNumMinus : FMSelectedRowNumNomal)
+                                    ];
+            
+            [newMorePointsArray addObject:[NSValue valueWithCGPoint:newItemPoint]];
+        }
+//        for (int a = 0; a < moreItemsArray.count; a++) {
+//            FMItemView *moreCell = [moreItemsArray objectAtIndex:a];
+//            moreCell.tag += 1;
+//        }
+        
+        [UIView animateWithDuration:kDefaultAnimationDuration
+                              delay:0
+                            options:0
+                         animations:^{
+                             itemView.transform = CGAffineTransformIdentity;
+                             itemView.frame = CGRectMake(newPoint.x, newPoint.y, itemSize.width, itemSize.height);
+                             itemView.tag = kEditeItemCandidateDefaultTag + position;
+                             
+                             for (int n = 0; n < moreItemsArray.count; n++) {
+                                 FMItemView *cell = [moreItemsArray objectAtIndex:n];
+                                 CGPoint newMoreItemPoint = [[newMorePointsArray objectAtIndex:n] CGPointValue];
+                                 cell.tag += (n >= position ? 1 : 0);
+                                 cell.frame = CGRectMake(newMoreItemPoint.x, newMoreItemPoint.y, itemSize.width, itemSize.height);
+    
+                             }
+                             DLog(@"moreArray: %@",moreItemsArray);
+                             DLog(@"\n\n itemView frame:  %@",itemView);
+
+                             for (int m = 0; m < selectedItemsArray.count; m++) {
+                                 FMItemView *cell = [selectedItemsArray objectAtIndex:m];
+                                 CGPoint newItemPoint = [[newSelectedPointsArray objectAtIndex:m] CGPointValue];
+                                 cell.frame = CGRectMake(newItemPoint.x, newItemPoint.y, itemSize.width, itemSize.height);
+                             }
+                             
+                             CGFloat selectedViewHeight = _borderY * 2 + itemSize.height * selectedRowNums + (selectedRowNums - 1) * self.itemSpacing;
+                             self.tipsView.top = selectedViewHeight;
+                             
+                         } completion:^(BOOL finished) {
+                             _canEdited = YES;
+                             
+                         }];
+
+        
+    }
+}
+
+
+
 #pragma mark -- 插入事件
 - (void)insertObjectAtIndex:(NSInteger)index
                withItemView:(FMItemView *)itemView
              withIsSelected:(BOOL)flag
               withAnimation:(BOOL)animation
 {
+    CGSize itemSize = [self.dataSource sizeForLauncherItemView];
+    
     NSInteger selectedTotalNum = [self.dataSource numberOfItemsForLauncherWithIsSelected:YES];
     NSInteger moreTotalNum = [self.dataSource numberOfItemsForLauncherWithIsSelected:NO];
-    
+    NSInteger selectedRowNums = (selectedTotalNum + (self.numOfPerRow - 1))/self.numOfPerRow;
+
     _canEdited = NO;
     [self bringSubviewToFront:itemView];
     if (flag) {
-        NSInteger selectedTotalNum = [self.dataSource numberOfItemsForLauncherWithIsSelected:YES];
         CGPoint newPoint = [self originForItemAtPosition:(selectedTotalNum - 1) isSelectedView:YES selectedRowNumStatus:FMSelectedRowNumNomal];
         
         BOOL isNewRow = (((selectedTotalNum - 1)%([self numOfPerRow])) == 0);
@@ -374,10 +589,200 @@ typedef enum {
             }
         }
         for (int j = 0; j < itemViewsArray.count; j++) {
-            
+            CGPoint newItemPoint = [self originForItemAtPosition:j
+                                              isSelectedView:NO
+                                        selectedRowNumStatus:(isNewRow ? FMSelectedRowNumAdd : FMSelectedRowNumNomal)
+                                ];
+            [newPointsArray addObject:[NSValue valueWithCGPoint:newItemPoint]];
         }
         
+        [UIView animateWithDuration:kDefaultAnimationDuration
+                              delay:0
+                            options:0
+                         animations:^{
+                             itemView.frame = CGRectMake(newPoint.x, newPoint.y, itemSize.width, itemSize.height);
+                             itemView.tag = kEditeItemSelectedDefaultTag + (selectedTotalNum - 1);
+                             
+                             for (int n = 0; n < itemViewsArray.count; n++) {
+                                 FMItemView *cell = [itemViewsArray objectAtIndex:n];
+                                 CGPoint newItemPoint = [[newPointsArray objectAtIndex:n] CGPointValue];
+                                 cell.frame = CGRectMake(newItemPoint.x, newItemPoint.y, itemSize.width, itemSize.height);
+                                 cell.tag = kEditeItemCandidateDefaultTag + n;
+                                 
+                             }
+                             
+                             CGFloat selectedViewHeight = _borderY * 2 + itemSize.height * selectedRowNums + (selectedRowNums - 1) * self.itemSpacing;
+                             self.tipsView.top = selectedViewHeight;
+                             
+                         } completion:^(BOOL finished) {
+                             _canEdited = YES;
+                         }];
+        
+    }else {
+        BOOL isNewRow = ((selectedTotalNum %([self numOfPerRow])) == 0);
+        CGPoint newPoint = [self originForItemAtPosition:0
+                                          isSelectedView:NO
+                                    selectedRowNumStatus:(isNewRow ? FMSelectedRowNumMinus : FMSelectedRowNumNomal)
+                            ];
+        
+        NSMutableArray *moreItemsArray = [NSMutableArray array];
+        for (int i = 1; i < moreTotalNum; i++) {
+            FMItemView *moreCell = [self lookForAppointItemView:(i - 1) withIsSelectedView:NO];
+            [moreItemsArray addObject:moreCell];
+        }
+        
+        
+        NSMutableArray *selectedItemsArray = [NSMutableArray array];
+        NSMutableArray *newPointsArray = [NSMutableArray array];
+        for (int j = (index + 1); j <= selectedTotalNum; j++) {
+            FMItemView *selectedCell = [self lookForAppointItemView:j withIsSelectedView:YES];
+            selectedCell.tag = kEditeItemSelectedDefaultTag + (j - 1);
+            [selectedItemsArray addObject:selectedCell];
+            
+            CGPoint newItemPoint = [self originForItemAtPosition:(j - 1)
+                                                  isSelectedView:YES
+                                            selectedRowNumStatus:FMSelectedRowNumNomal];
+            [newPointsArray addObject:[NSValue valueWithCGPoint:newItemPoint]];
+        }
+        
+        [UIView animateWithDuration:kDefaultAnimationDuration
+                              delay:0
+                            options:0
+                         animations:^{
+                             
+                             itemView.tag = kEditeItemCandidateDefaultTag;
+                             itemView.frame = CGRectMake(newPoint.x, newPoint.y, itemSize.width, itemSize.height);
+                             
+                             for (int i = 0; i < moreItemsArray.count; i++) {
+                                 FMItemView *moreCell = [moreItemsArray objectAtIndex:i];
+                                 moreCell.tag += 1;
+                                 
+                                 CGPoint moreNewPoint = [self originForItemAtPosition:(i + 1)
+                                                                       isSelectedView:NO
+                                                                 selectedRowNumStatus:(isNewRow ? FMSelectedRowNumMinus : FMSelectedRowNumNomal)
+                                                         ];
+                                 moreCell.frame = CGRectMake(moreNewPoint.x, moreNewPoint.y, itemSize.width, itemSize.height);
+                             }
+                             
+                             for (int j = 0; j < selectedItemsArray.count; j++) {
+                                 FMItemView *selectedCell = [selectedItemsArray objectAtIndex:j];
+                                 CGPoint selectedNewPoint = [[newPointsArray objectAtIndex:j] CGPointValue];
+                                 selectedCell.frame = CGRectMake(selectedNewPoint.x, selectedNewPoint.y, itemSize.width, itemSize.height);
+                             }
+                             
+                             CGFloat selectedViewHeight = _borderY * 2 + itemSize.height * selectedRowNums + (selectedRowNums - 1) * self.itemSpacing;
+                             self.tipsView.top = selectedViewHeight;
+                             
+                         } completion:^(BOOL finished) {
+                             _canEdited = YES;
+                         }];
     }
+    
+}
+
+- (void)sortingMoveDidStartAtPoint:(CGPoint)point isSelected:(BOOL)flag
+{
+    NSInteger position = [self positionForCurrentLocation:point isSelectedView:flag];
+    
+    FMItemView *itemView = [self lookForAppointItemView:position withIsSelectedView:flag];
+    self.movingItemView = itemView;
+    [self bringSubviewToFront:self.movingItemView];
+    
+    _sortFuturePosition = position;
+    
+    _selectedItemTag = position + (flag ? kEditeItemSelectedDefaultTag : kEditeItemCandidateDefaultTag);
+    
+    _canMoved = YES;
+    if (position == kFM_INVALID_POSITION) {
+        _canMoved = NO;
+    }
+    if (flag) {
+        if (![self.dataSource fMLancherView:self canEditItemForIsSelectedAtIndex:position]) {
+            _canMoved = NO;
+        }
+    }
+    
+    self.movingItemView.tag = 0;
+    
+}
+
+- (void)sortingMoveDidStopAtPoint:(CGPoint)point isSelected:(BOOL)flag
+{
+    
+    CGSize itemSize = [self.dataSource sizeForLauncherItemView];
+    
+    self.movingItemView.tag = _sortFuturePosition + (flag ? kEditeItemSelectedDefaultTag : kEditeItemCandidateDefaultTag);
+    
+    CGPoint newOrign = [self originForItemAtPosition:_sortFuturePosition
+                                      isSelectedView:flag
+                                selectedRowNumStatus:FMSelectedRowNumNomal];
+    CGRect newRect = CGRectMake(newOrign.x, newOrign.y, itemSize.width, itemSize.height);
+    
+    [UIView animateWithDuration:kDefaultAnimationDuration
+                          delay:0
+                        options:0
+                     animations:^{
+                         self.movingItemView.transform = CGAffineTransformIdentity;
+                         self.movingItemView.frame = newRect;
+                     } completion:^(BOOL finished) {
+                         self.movingItemView = nil;
+                         _sortFuturePosition = kFM_INVALID_POSITION;
+                         _selectedItemTag = kFM_INVALID_POSITION;
+                     }
+     ];
+
+}
+
+- (void)sortingMoveDidContinueToPoint:(CGPoint)point isSelected:(BOOL)flag
+{
+    BOOL movingIsSelected = YES;
+    if (_selectedItemTag - kEditeItemCandidateDefaultTag >= 0) {
+        movingIsSelected = NO;
+    }
+ 
+    int position = [self positionForCurrentLocation:point isSelectedView:flag];
+    
+    int currentItemTag = position + (flag ? kEditeItemSelectedDefaultTag : kEditeItemCandidateDefaultTag);
+    
+    BOOL hasChangeArea = NO;
+    if ((_selectedItemTag >= kEditeItemCandidateDefaultTag && currentItemTag < kEditeItemCandidateDefaultTag) || (currentItemTag >= kEditeItemCandidateDefaultTag && _selectedItemTag < kEditeItemSelectedDefaultTag) ) {
+        hasChangeArea = YES;
+    }
+    
+    if (movingIsSelected && point.y > self.tipsView.bottom && position != kFM_INVALID_POSITION) {
+        //这是属于从已选项里移除，然后插入在备选项中
+        [self removeItemView:self.movingItemView
+               removeAtIndex:_sortFuturePosition
+            insertAtPosition:position
+         isSelectedForRemove:!flag
+         ];
+    }else if (!movingIsSelected && point.y < self.tipsView.top && position != kFM_INVALID_POSITION && [self.dataSource fMLancherView:self canEditItemForIsSelectedAtIndex:position]) {
+        //这属于从备选项里移除，插入到已选项里
+    }else {
+        
+    }
+    
+//    if (movingIsSelected && point.y >= self.tipsView.bottom) {
+//        if (position == kFM_INVALID_POSITION) {
+//           // position = [self.dataSource numberOfItemsForLauncherWithIsSelected:NO];
+//            position = 0;
+//        }
+//        DLog(@"_sortIndex: %d    insertIndex: %d",_sortFuturePosition,position);
+//
+//        //这是属于从已选项里移除，然后插入在备选项中
+//        [self removeItemView:self.movingItemView
+//               removeAtIndex:_sortFuturePosition
+//            insertAtPosition:position
+//         isSelectedForRemove:!flag
+//         ];
+//    }else if (!movingIsSelected && point.y <= self.tipsView.top) {
+//        //这属于从备选项里移除，插入到已选项里
+//        [self removeItemView:self.movingItemView
+//               removeAtIndex:_sortFuturePosition
+//            insertAtPosition:position
+//         isSelectedForRemove:!flag
+//         ];
+//    }
     
 }
 
@@ -437,26 +842,29 @@ typedef enum {
 - (void)longPressGestureUpdated:(UILongPressGestureRecognizer *)longPressGesture
 {
     CGPoint locationTouch = [longPressGesture locationInView:self];
-    BOOL isSelected = YES;
-    if (CGRectContainsPoint(self.moreScrollView.frame, locationTouch)) {
-        isSelected = NO;
-        return;
-    }
+    BOOL isSelected = [self isLocatedOnSelectedViewForPoint:locationTouch];
+    
     
     NSInteger position = [self positionForCurrentLocation:locationTouch isSelectedView:isSelected];
-    if (position == kFM_INVALID_POSITION || position == 0 || position == 1) {
+    if (position == kFM_INVALID_POSITION) {
         return;
     }
+    if (isSelected) {
+        if (![self.dataSource fMLancherView:self canEditItemForIsSelectedAtIndex:position]) {
+            return;
+        }
+    }
+    
     
     switch (longPressGesture.state) {
         case UIGestureRecognizerStateBegan:
         {
             if (!_movingItemView) {
                 CGPoint locationTouch = [longPressGesture locationInView:self];
-                NSInteger position = [self positionForCurrentLocation:locationTouch isSelectedView:YES];
+                NSInteger position = [self positionForCurrentLocation:locationTouch isSelectedView:isSelected];
                 
                 if (position != kFM_INVALID_POSITION) {
-                    [self sortingMoveDidStartAtPoint:locationTouch];
+                    [self sortingMoveDidStartAtPoint:locationTouch isSelected:isSelected];
                 }
             }
         }
@@ -468,7 +876,7 @@ typedef enum {
             [_panGesture end];
             if (_movingItemView) {
                 CGPoint touchLocation = [longPressGesture locationInView:self];
-                [self sortingMoveDidStopAtPoint:touchLocation];
+                [self sortingMoveDidStopAtPoint:touchLocation isSelected:isSelected];
             }
         }
             break;
@@ -479,22 +887,19 @@ typedef enum {
 
 - (void)panGestureUpdated:(UIPanGestureRecognizer *)panGesture
 {
-    if (!_canMoved) {
+    if (!_canMoved || !_canEdited) {
         return;
     }
     
+    CGPoint locationTouch = [panGesture locationInView:self];
+    BOOL isSelected = [self isLocatedOnSelectedViewForPoint:locationTouch];
+
     switch (panGesture.state) {
         case UIGestureRecognizerStateEnded:
         case UIGestureRecognizerStateCancelled:
         case UIGestureRecognizerStateFailed:
         {
-            CGPoint locationTouch = [panGesture locationInView:self];
-            BOOL isSelected = YES;
-            if (CGRectContainsPoint(self.moreScrollView.frame, locationTouch)) {
-                isSelected = NO;
-                
-            }
-            [self sortingMoveDidStopAtPoint:locationTouch];
+            [self sortingMoveDidStopAtPoint:locationTouch isSelected:isSelected];
         }
             break;
         case UIGestureRecognizerStateBegan:
@@ -506,10 +911,9 @@ typedef enum {
         {
             CGPoint translation = [panGesture translationInView:self];
             CGPoint offset = translation;
-            CGPoint locationInScroll = [panGesture locationInView:self];
             
             self.movingItemView.transform = CGAffineTransformMakeTranslation(offset.x, offset.y);
-            [self sortingMoveDidContinueToPoint:locationInScroll];
+            [self sortingMoveDidContinueToPoint:locationTouch isSelected:isSelected];
             
         }
             break;
