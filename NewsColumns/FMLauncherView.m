@@ -387,6 +387,29 @@ typedef enum {
      ];
 }
 
+- (void)insertItemAtPosition:(NSInteger)position
+                withItemView:(FMItemView *)itemView
+                  isSelected:(BOOL)flag
+{
+    CGSize itemSize = [self.dataSource sizeForLauncherItemView];
+    
+    NSInteger selectedTotalNum = [self.dataSource numberOfItemsForLauncherWithIsSelected:YES];
+    NSInteger moreTotalNum = [self.dataSource numberOfItemsForLauncherWithIsSelected:NO];
+    NSInteger selectedRowNums = (selectedTotalNum + (self.numOfPerRow - 1))/self.numOfPerRow;
+    
+    _canEdited = NO;
+    [self bringSubviewToFront:itemView];
+
+}
+
+- (void)removeItemAtPosition:(NSInteger)position
+                withItemView:(FMItemView *)itemView
+                  isSelected:(BOOL)flag
+{
+    
+}
+
+
 #pragma mark -- 移除&&插入事件
 - (void)insertItemAtPosition:(NSInteger)position
            removeItemAtIndex:(NSInteger)index
