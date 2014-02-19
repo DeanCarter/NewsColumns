@@ -57,6 +57,8 @@
 		41691D2518ADF0E900745FC3 /* FMEditItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 41691D2418ADF0E900745FC3 /* FMEditItemView.m */; };
 		41691D2918AE08AD00745FC3 /* FMSectionEditViewLayOutStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 41691D2818AE08AD00745FC3 /* FMSectionEditViewLayOutStrategy.m */; };
 		4196741618ADB99C00A2C0F0 /* UIView+DAddition.m in Sources */ = {isa = PBXBuildFile; fileRef = 4196741518ADB99C00A2C0F0 /* UIView+DAddition.m */; };
+		41E3DE6418B48F9800E2C73B /* FMLauncherView.m in Sources */ = {isa = PBXBuildFile; fileRef = 41E3DE6318B48F9800E2C73B /* FMLauncherView.m */; };
+		41E3DE6718B48FB000E2C73B /* FMItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 41E3DE6618B48FB000E2C73B /* FMItemView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -130,6 +132,10 @@
 		41691D2818AE08AD00745FC3 /* FMSectionEditViewLayOutStrategy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMSectionEditViewLayOutStrategy.m; sourceTree = "<group>"; };
 		4196741418ADB99C00A2C0F0 /* UIView+DAddition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+DAddition.h"; sourceTree = "<group>"; };
 		4196741518ADB99C00A2C0F0 /* UIView+DAddition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+DAddition.m"; sourceTree = "<group>"; };
+		41E3DE6218B48F9800E2C73B /* FMLauncherView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMLauncherView.h; sourceTree = "<group>"; };
+		41E3DE6318B48F9800E2C73B /* FMLauncherView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMLauncherView.m; sourceTree = "<group>"; };
+		41E3DE6518B48FB000E2C73B /* FMItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMItemView.h; sourceTree = "<group>"; };
+		41E3DE6618B48FB000E2C73B /* FMItemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMItemView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -179,6 +185,7 @@
 		188FED0C18AD0D510045F96E /* NewsColumns */ = {
 			isa = PBXGroup;
 			children = (
+				41E3DE6118B48F3600E2C73B /* FMLauncherView */,
 				4196741418ADB99C00A2C0F0 /* UIView+DAddition.h */,
 				4196741518ADB99C00A2C0F0 /* UIView+DAddition.m */,
 				41691D1F18ADF05F00745FC3 /* FMNewsSectionEdit */,
@@ -279,6 +286,17 @@
 			path = FMNewsSectionEdit;
 			sourceTree = SOURCE_ROOT;
 		};
+		41E3DE6118B48F3600E2C73B /* FMLauncherView */ = {
+			isa = PBXGroup;
+			children = (
+				41E3DE6218B48F9800E2C73B /* FMLauncherView.h */,
+				41E3DE6318B48F9800E2C73B /* FMLauncherView.m */,
+				41E3DE6518B48FB000E2C73B /* FMItemView.h */,
+				41E3DE6618B48FB000E2C73B /* FMItemView.m */,
+			);
+			name = FMLauncherView;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -378,9 +396,11 @@
 				18B7151118AD23CD002E67F3 /* GMGridViewLayoutStrategies.m in Sources */,
 				4196741618ADB99C00A2C0F0 /* UIView+DAddition.m in Sources */,
 				41691D2918AE08AD00745FC3 /* FMSectionEditViewLayOutStrategy.m in Sources */,
+				41E3DE6718B48FB000E2C73B /* FMItemView.m in Sources */,
 				1891821D18B10C010061B6DC /* FirstViewController.m in Sources */,
 				188FED2018AD0D510045F96E /* ViewController.m in Sources */,
 				41691D2518ADF0E900745FC3 /* FMEditItemView.m in Sources */,
+				41E3DE6418B48F9800E2C73B /* FMLauncherView.m in Sources */,
 				1891822118B10D4D0061B6DC /* FirstItemView.m in Sources */,
 				18B7151218AD23CD002E67F3 /* UIGestureRecognizer+GMGridViewAdditions.m in Sources */,
 				18B7151018AD23CD002E67F3 /* GMGridViewCell.m in Sources */,
