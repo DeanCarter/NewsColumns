@@ -101,6 +101,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
 	// Do any additional setup after loading the view, typically from a nib.
     UIImage *arrowImage = [UIImage imageNamed:@"channel_nav_arrow"];
     UIImage *selectedArrowImage = [UIImage imageWithCGImage:arrowImage.CGImage scale:2 orientation:UIImageOrientationDown];

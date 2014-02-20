@@ -59,6 +59,9 @@
 		4196741618ADB99C00A2C0F0 /* UIView+DAddition.m in Sources */ = {isa = PBXBuildFile; fileRef = 4196741518ADB99C00A2C0F0 /* UIView+DAddition.m */; };
 		41E3DE6418B48F9800E2C73B /* FMLauncherView.m in Sources */ = {isa = PBXBuildFile; fileRef = 41E3DE6318B48F9800E2C73B /* FMLauncherView.m */; };
 		41E3DE6718B48FB000E2C73B /* FMItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 41E3DE6618B48FB000E2C73B /* FMItemView.m */; };
+		41E3DE6A18B58A7900E2C73B /* FMSectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 41E3DE6918B58A7900E2C73B /* FMSectionView.m */; };
+		41E3DE6D18B58CA700E2C73B /* ItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 41E3DE6C18B58CA700E2C73B /* ItemView.m */; };
+		41E3DE6F18B58CB200E2C73B /* ItemView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 41E3DE6E18B58CB200E2C73B /* ItemView.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -136,6 +139,11 @@
 		41E3DE6318B48F9800E2C73B /* FMLauncherView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMLauncherView.m; sourceTree = "<group>"; };
 		41E3DE6518B48FB000E2C73B /* FMItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMItemView.h; sourceTree = "<group>"; };
 		41E3DE6618B48FB000E2C73B /* FMItemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMItemView.m; sourceTree = "<group>"; };
+		41E3DE6818B58A7900E2C73B /* FMSectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMSectionView.h; sourceTree = "<group>"; };
+		41E3DE6918B58A7900E2C73B /* FMSectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMSectionView.m; sourceTree = "<group>"; };
+		41E3DE6B18B58CA700E2C73B /* ItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemView.h; sourceTree = "<group>"; };
+		41E3DE6C18B58CA700E2C73B /* ItemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ItemView.m; sourceTree = "<group>"; };
+		41E3DE6E18B58CB200E2C73B /* ItemView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ItemView.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -188,6 +196,11 @@
 				41E3DE6118B48F3600E2C73B /* FMLauncherView */,
 				4196741418ADB99C00A2C0F0 /* UIView+DAddition.h */,
 				4196741518ADB99C00A2C0F0 /* UIView+DAddition.m */,
+				41E3DE6818B58A7900E2C73B /* FMSectionView.h */,
+				41E3DE6918B58A7900E2C73B /* FMSectionView.m */,
+				41E3DE6B18B58CA700E2C73B /* ItemView.h */,
+				41E3DE6C18B58CA700E2C73B /* ItemView.m */,
+				41E3DE6E18B58CB200E2C73B /* ItemView.xib */,
 				41691D1F18ADF05F00745FC3 /* FMNewsSectionEdit */,
 				18B7151418AD2485002E67F3 /* GMGridView */,
 				188FED1518AD0D510045F96E /* AppDelegate.h */,
@@ -374,6 +387,7 @@
 				18B714BA18AD1928002E67F3 /* loginview_loginbutton@2x.png in Resources */,
 				18B714D218AD1B8F002E67F3 /* channel_button_delete@2x.png in Resources */,
 				18B714D918AD1B8F002E67F3 /* channel_compact_placeholder_inactive@2x.png in Resources */,
+				41E3DE6F18B58CB200E2C73B /* ItemView.xib in Resources */,
 				18B714DC18AD1B8F002E67F3 /* channel_nav_arrow@2x.png in Resources */,
 				18B714E118AD1B8F002E67F3 /* channel_sidebar_button_selected@2x.png in Resources */,
 				18B714E518AD1B8F002E67F3 /* channel_undo_placeholder@2x.png in Resources */,
@@ -403,8 +417,10 @@
 				41E3DE6418B48F9800E2C73B /* FMLauncherView.m in Sources */,
 				1891822118B10D4D0061B6DC /* FirstItemView.m in Sources */,
 				18B7151218AD23CD002E67F3 /* UIGestureRecognizer+GMGridViewAdditions.m in Sources */,
+				41E3DE6D18B58CA700E2C73B /* ItemView.m in Sources */,
 				18B7151018AD23CD002E67F3 /* GMGridViewCell.m in Sources */,
 				411278AA18B1F19F00187AC1 /* FMNewsSectionView.m in Sources */,
+				41E3DE6A18B58A7900E2C73B /* FMSectionView.m in Sources */,
 				18B7151318AD23CD002E67F3 /* UIView+GMGridViewAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

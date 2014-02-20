@@ -20,7 +20,7 @@ static const CGFloat kDefaultAnimationDuration = 0.3;
 
 typedef enum {
     FMItemSubViewForAll,
-    FMItemSubViewFoIsSelected,
+    FMItemSubViewForIsSelected,
     FMItemSubViewForMore
 }FMItemSubViewType;
 
@@ -115,7 +115,7 @@ typedef enum {
             if ([v isKindOfClass:[FMItemView class]]) {
                 if (type == FMItemSubViewForAll) {
                     [itemViewArray addObject:v];
-                }else if (type == FMItemSubViewFoIsSelected) {
+                }else if (type == FMItemSubViewForIsSelected) {
                     if (v.tag >= kEditeItemSelectedDefaultTag && v.tag < kEditeItemCandidateDefaultTag) {
                         [itemViewArray addObject:v];
                     }
@@ -195,7 +195,7 @@ typedef enum {
 - (void)show
 {
     NSAssert([self numOfPerRow] != 0, @"每行的Item个数为0，不符合逻辑!");
-    
+    DLog(@"\n     *     \n    ***    \n   *****   \n  *******  \n ********* \n***********\n");
     NSInteger selectedTotalNum = [self.dataSource numberOfItemsForLauncherWithIsSelected:YES];
     NSInteger moreTotalNum = [self.dataSource numberOfItemsForLauncherWithIsSelected:NO];
     
@@ -214,7 +214,9 @@ typedef enum {
     if (![self.subviews containsObject:self.tipsView]) {
         [self addSubview:self.tipsView];
     }
-    self.tipsView.top = selectedViewHeight;
+    if (_isFirstLoad) {
+        self.tipsView.top = selectedViewHeight;
+    }
     
     for (int j = 0; j < moreTotalNum; j++) {
         if (![self lookForAppointItemView:j withIsSelectedView:NO] && _isFirstLoad) {
@@ -225,6 +227,7 @@ typedef enum {
     
     _isFirstLoad = NO;
     
+    DLog(@"\n     &     \n    &&&    \n   &&&&&   \n  &&&&&&&  \n &&&&&&&&& \n&&&&&&&&&&&&\n");
 }
 
 #pragma mark -- 根据Index和是否是已选，生成新的ItemView
@@ -257,7 +260,7 @@ typedef enum {
 {
     FMItemView *itemView = nil;
     NSInteger viewTag = flag ? (kEditeItemSelectedDefaultTag + position) : (kEditeItemCandidateDefaultTag + position);
-    for (UIView *v in [self itemSubviewForType:(flag ? FMItemSubViewFoIsSelected : FMItemSubViewForMore)]) {
+    for (UIView *v in [self itemSubviewForType:(flag ? FMItemSubViewForIsSelected : FMItemSubViewForMore)]) {
         if ([v isKindOfClass:[FMItemView class]] && v.tag == viewTag) {
             itemView = (FMItemView *)v;
             return itemView;
@@ -397,8 +400,9 @@ typedef enum {
     NSInteger moreTotalNum = [self.dataSource numberOfItemsForLauncherWithIsSelected:NO];
     NSInteger selectedRowNums = (selectedTotalNum + (self.numOfPerRow - 1))/self.numOfPerRow;
     
-    _canEdited = NO;
     [self bringSubviewToFront:itemView];
+    
+    
 
 }
 
@@ -422,7 +426,7 @@ typedef enum {
     NSInteger moreTotalNum = [self.dataSource numberOfItemsForLauncherWithIsSelected:NO];
     NSInteger selectedRowNums = (selectedTotalNum + (self.numOfPerRow - 1))/self.numOfPerRow;
     
-    _canEdited = NO;
+    _canEdited = YES;
     [self bringSubviewToFront:itemView];
     
     //从备选项移除，插入到已选项中
@@ -515,12 +519,15 @@ typedef enum {
                                     ];
             if (index == i) {
                 cell.tag = kFM_INVALID_POSITION;
-            }
-            cell.tag = (i > index ? (cell.tag - 1) : cell.tag);
-            if (cell.tag != itemView.tag) {
+            }else {
                 [selectedItemsArray addObject:cell];
                 [newSelectedPointsArray addObject:[NSValue valueWithCGPoint:newItemPoint]];
             }
+        }
+        
+        for (int i = 0; i < selectedItemsArray.count; i++) {
+            FMItemView *cell = [selectedItemsArray objectAtIndex:i];
+            cell.tag -= (i >= index ? 1 : 0);
         }
         
         NSMutableArray *moreItemsArray = [NSMutableArray array];
@@ -540,28 +547,26 @@ typedef enum {
             
             [newMorePointsArray addObject:[NSValue valueWithCGPoint:newItemPoint]];
         }
-//        for (int a = 0; a < moreItemsArray.count; a++) {
-//            FMItemView *moreCell = [moreItemsArray objectAtIndex:a];
-//            moreCell.tag += 1;
-//        }
+        for (int a = 0; a < moreItemsArray.count; a++) {
+            FMItemView *moreCell = [moreItemsArray objectAtIndex:a];
+            moreCell.tag += (a >= position ? 1 : 0);
+        }
         
+        itemView.tag = kEditeItemCandidateDefaultTag + position;
+
         [UIView animateWithDuration:kDefaultAnimationDuration
                               delay:0
                             options:0
                          animations:^{
-                             itemView.transform = CGAffineTransformIdentity;
-                             itemView.frame = CGRectMake(newPoint.x, newPoint.y, itemSize.width, itemSize.height);
-                             itemView.tag = kEditeItemCandidateDefaultTag + position;
+                             //itemView.transform = CGAffineTransformIdentity;
+                             //itemView.frame = CGRectMake(newPoint.x, newPoint.y, itemSize.width, itemSize.height);
                              
                              for (int n = 0; n < moreItemsArray.count; n++) {
                                  FMItemView *cell = [moreItemsArray objectAtIndex:n];
                                  CGPoint newMoreItemPoint = [[newMorePointsArray objectAtIndex:n] CGPointValue];
-                                 cell.tag += (n >= position ? 1 : 0);
                                  cell.frame = CGRectMake(newMoreItemPoint.x, newMoreItemPoint.y, itemSize.width, itemSize.height);
     
                              }
-                             DLog(@"moreArray: %@",moreItemsArray);
-                             DLog(@"\n\n itemView frame:  %@",itemView);
 
                              for (int m = 0; m < selectedItemsArray.count; m++) {
                                  FMItemView *cell = [selectedItemsArray objectAtIndex:m];
@@ -571,10 +576,9 @@ typedef enum {
                              
                              CGFloat selectedViewHeight = _borderY * 2 + itemSize.height * selectedRowNums + (selectedRowNums - 1) * self.itemSpacing;
                              self.tipsView.top = selectedViewHeight;
-                             
+
                          } completion:^(BOOL finished) {
-                             _canEdited = YES;
-                             
+                             //_canEdited = YES;
                          }];
 
         
@@ -758,6 +762,9 @@ typedef enum {
 
 - (void)sortingMoveDidContinueToPoint:(CGPoint)point isSelected:(BOOL)flag
 {
+    
+    CGSize itemSize = [self.dataSource sizeForLauncherItemView];
+    
     BOOL movingIsSelected = YES;
     if (_selectedItemTag - kEditeItemCandidateDefaultTag >= 0) {
         movingIsSelected = NO;
@@ -767,6 +774,124 @@ typedef enum {
     
     int currentItemTag = position + (flag ? kEditeItemSelectedDefaultTag : kEditeItemCandidateDefaultTag);
     
+    
+    NSInteger status = kFM_INVALID_POSITION;
+    if (_selectedItemTag >= kEditeItemCandidateDefaultTag && currentItemTag < kEditeItemCandidateDefaultTag) {
+        //从备选项移到已选项
+        if (position == kFM_INVALID_POSITION || position > [self.dataSource numberOfItemsForLauncherWithIsSelected:NO]) {
+            position = [self.dataSource numberOfItemsForLauncherWithIsSelected:NO];
+        }
+        status = 1;
+        [self removeItemView:self.movingItemView
+               removeAtIndex:_sortFuturePosition
+            insertAtPosition:position
+         isSelectedForRemove:NO
+         ];
+        
+        
+    }else if (currentItemTag >= kEditeItemCandidateDefaultTag && _selectedItemTag < kEditeItemCandidateDefaultTag) {
+        //从已选项移到备选项
+        if (position == kFM_INVALID_POSITION || position > [self.dataSource numberOfItemsForLauncherWithIsSelected:NO]) {
+            position = [self.dataSource numberOfItemsForLauncherWithIsSelected:NO];
+        }
+        status = 2;
+        [self removeItemView:self.movingItemView
+               removeAtIndex:_sortFuturePosition
+            insertAtPosition:position
+         isSelectedForRemove:YES
+         ];
+        
+        _sortFuturePosition = position;
+        _selectedItemTag = currentItemTag;
+    }else if (currentItemTag < kEditeItemCandidateDefaultTag && _selectedItemTag < kEditeItemCandidateDefaultTag) {
+        //在已选项移动
+        status = 3;
+        if (position == kFM_INVALID_POSITION || position == _sortFuturePosition || (position >= [self.dataSource numberOfItemsForLauncherWithIsSelected:YES])) {
+            return;
+        }
+        if (flag) {
+            if (![self.dataSource fMLancherView:self canEditItemForIsSelectedAtIndex:position]) {
+                return;
+            }
+        }
+        
+        BOOL positionToken = NO;
+        
+        for (UIView *v in [self itemSubviewForType:FMItemSubViewForIsSelected]) {
+            if ([v isKindOfClass:[FMItemView class]] && v.tag == currentItemTag && v != self.movingItemView) {
+                positionToken = YES;
+                break;
+            }
+        }
+ 
+        if (positionToken) {
+            if (self.movingItemView) {
+                //移动当前移动的ItemView移动到的地方的ItemView到初始移动位置
+                UIView *v = [self lookForAppointItemView:position withIsSelectedView:YES];
+                v.tag = _sortFuturePosition + kEditeItemSelectedDefaultTag;
+                CGPoint origin = [self originForItemAtPosition:_sortFuturePosition
+                                                isSelectedView:YES
+                                          selectedRowNumStatus:FMSelectedRowNumNomal
+                                  ];
+                
+                [UIView animateWithDuration:(kDefaultAnimationDuration - .1)
+                                      delay:0
+                                    options:0
+                                 animations:^{
+                                     v.frame = CGRectMake(origin.x, origin.y, itemSize.width,itemSize.height);
+                                 } completion:^(BOOL finished) {
+                                     
+                                 }];
+            }
+            _sortFuturePosition = position;
+            _selectedItemTag = currentItemTag;
+        }
+        
+    }else if (currentItemTag >= kEditeItemCandidateDefaultTag && _selectedItemTag >= kEditeItemCandidateDefaultTag) {
+        //在备选项移动
+        status = 4;
+        
+        if (position == kFM_INVALID_POSITION || position == _sortFuturePosition || (position >= [self.dataSource numberOfItemsForLauncherWithIsSelected:YES])) {
+            return;
+        }
+        
+        BOOL positionToken = NO;
+        
+        for (UIView *v in [self itemSubviewForType:FMItemSubViewForMore]) {
+            if ([v isKindOfClass:[FMItemView class]] && v.tag == currentItemTag && v != self.movingItemView) {
+                positionToken = YES;
+                break;
+            }
+        }
+        
+        if (positionToken) {
+            if (self.movingItemView) {
+                //移动当前移动的ItemView移动到的地方的ItemView到初始移动位置
+                UIView *v = [self lookForAppointItemView:position withIsSelectedView:NO];
+                v.tag = _sortFuturePosition + kEditeItemCandidateDefaultTag;
+                CGPoint origin = [self originForItemAtPosition:_sortFuturePosition
+                                                isSelectedView:NO
+                                          selectedRowNumStatus:FMSelectedRowNumNomal
+                                  ];
+                
+                [UIView animateWithDuration:(kDefaultAnimationDuration - .1)
+                                      delay:0
+                                    options:0
+                                 animations:^{
+                                     v.frame = CGRectMake(origin.x, origin.y, itemSize.width,itemSize.height);
+                                 } completion:^(BOOL finished) {
+                                     
+                                 }];
+            }
+            DLog(@"被调用了!");
+            _sortFuturePosition = position;
+            _selectedItemTag = currentItemTag;
+        }
+
+    }
+    
+    
+    return;
     BOOL hasChangeArea = NO;
     if ((_selectedItemTag >= kEditeItemCandidateDefaultTag && currentItemTag < kEditeItemCandidateDefaultTag) || (currentItemTag >= kEditeItemCandidateDefaultTag && _selectedItemTag < kEditeItemSelectedDefaultTag) ) {
         hasChangeArea = YES;

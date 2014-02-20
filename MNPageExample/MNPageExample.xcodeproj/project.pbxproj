@@ -45,6 +45,20 @@
 			remoteGlobalIDString = 3945BE5A179DBF9700AB3981;
 			remoteInfo = MNPageViewControllerTests;
 		};
+		41C7DF2218B59543008C84A7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 41C7DF1D18B59543008C84A7 /* MNPageViewController.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 3945BE4A179DBF9700AB3981;
+			remoteInfo = MNPageViewController;
+		};
+		41C7DF2418B59543008C84A7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 41C7DF1D18B59543008C84A7 /* MNPageViewController.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 3945BE5A179DBF9700AB3981;
+			remoteInfo = MNPageViewControllerTests;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -67,6 +81,7 @@
 		3945BEAE179DCF5400AB3981 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		3945BEB0179DCF5400AB3981 /* MNPageExampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MNPageExampleTests.m; sourceTree = "<group>"; };
 		3945BEBA179DD09300AB3981 /* MNPageViewController.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MNPageViewController.xcodeproj; path = ../../MNPageViewController.xcodeproj; sourceTree = "<group>"; };
+		41C7DF1D18B59543008C84A7 /* MNPageViewController.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MNPageViewController.xcodeproj; path = ../../MNPageViewController/MNPageViewController.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +131,7 @@
 		3945BE81179DCF5400AB3981 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				41C7DF1D18B59543008C84A7 /* MNPageViewController.xcodeproj */,
 				3945BEBA179DD09300AB3981 /* MNPageViewController.xcodeproj */,
 				3945BE82179DCF5400AB3981 /* Foundation.framework */,
 				3945BE84179DCF5400AB3981 /* CoreGraphics.framework */,
@@ -171,6 +187,15 @@
 			children = (
 				3945BEC0179DD09300AB3981 /* libMNPageViewController.a */,
 				3945BEC2179DD09300AB3981 /* MNPageViewControllerTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		41C7DF1E18B59543008C84A7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				41C7DF2318B59543008C84A7 /* libMNPageViewController.a */,
+				41C7DF2518B59543008C84A7 /* MNPageViewControllerTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -241,6 +266,10 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = 41C7DF1E18B59543008C84A7 /* Products */;
+					ProjectRef = 41C7DF1D18B59543008C84A7 /* MNPageViewController.xcodeproj */;
+				},
+				{
 					ProductGroup = 3945BEBB179DD09300AB3981 /* Products */;
 					ProjectRef = 3945BEBA179DD09300AB3981 /* MNPageViewController.xcodeproj */;
 				},
@@ -266,6 +295,20 @@
 			fileType = wrapper.cfbundle;
 			path = MNPageViewControllerTests.xctest;
 			remoteRef = 3945BEC1179DD09300AB3981 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		41C7DF2318B59543008C84A7 /* libMNPageViewController.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libMNPageViewController.a;
+			remoteRef = 41C7DF2218B59543008C84A7 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		41C7DF2518B59543008C84A7 /* MNPageViewControllerTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = MNPageViewControllerTests.xctest;
+			remoteRef = 41C7DF2418B59543008C84A7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */

@@ -1,14 +1,14 @@
 //
-//  FMItemView.m
+//  ItemView.m
 //  NewsColumns
 //
-//  Created by Apple on 14-2-19.
+//  Created by Dean on 14-2-17.
 //  Copyright (c) 2014年 Dean. All rights reserved.
 //
 
-#import "FMItemView.h"
+#import "ItemView.h"
 
-@implementation FMItemView
+@implementation ItemView
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -19,9 +19,9 @@
     return self;
 }
 
-- (void)setTag:(NSInteger)tag
++ (id)loadViewFromXib
 {
-    [super setTag:tag];
+    return [[NSBundle mainBundle] loadNibNamed:@"ItemView" owner:nil options:nil][0];
 }
 
 /*
@@ -33,4 +33,9 @@
 }
 */
 
+- (void)dealloc {
+    [_contentView release];
+    [_tipsLabel release];
+    [super dealloc];
+}
 @end
